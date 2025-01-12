@@ -11,7 +11,7 @@ import SwiftUI
 struct FinlogueApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            IntroView()
         }
     }
 }
