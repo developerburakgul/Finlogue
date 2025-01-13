@@ -25,6 +25,8 @@ enum OnboardingSection: Int, CaseIterable, Hashable {
 struct OnboardingView: View {
     
     @State var currentOnboardingSection: OnboardingSection = .welcome
+    @Binding var isShownOnboarding: Bool? 
+//    @AppStorage("isShownOnBoarding") private var isShownOnboarding: Bool?
     
     
     var body: some View {
@@ -50,7 +52,7 @@ struct OnboardingView: View {
             imageName: "figure",
             title: "Welcome to Finlogue",
             description: "Give me a huge",
-            buttonTitle: "Start") {
+            buttonTitle: "Next") {
                 nextOnboardingSection()
             }
         
@@ -71,8 +73,9 @@ struct OnboardingView: View {
             imageName: "chart.line.uptrend.xyaxis.circle",
             title: "Show your income",
             description: "Every one needs a finance app",
-            buttonTitle: "Next") {
-                nextOnboardingSection()
+            buttonTitle: "Start") {
+//                nextOnboardingSection()
+                isShownOnboarding = true
             }
     }
     
@@ -80,6 +83,7 @@ struct OnboardingView: View {
         withAnimation(.spring) {
             currentOnboardingSection = currentOnboardingSection.next()
         }
+        print(currentOnboardingSection)
     }
 }
 
@@ -131,5 +135,5 @@ struct OnboardingPageView: View {
 
 #Preview {
     //    OnboardingPageView(imageName: "figure", title: "Welcome", description: "Welcome to your personal Finlogue", buttonTitle: nil, buttonAction: nil)
-    OnboardingView()
+//    OnboardingView()
 }

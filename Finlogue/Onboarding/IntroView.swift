@@ -11,9 +11,9 @@ struct IntroView: View {
     @AppStorage("isShownOnBoarding") private var isShownOnboarding: Bool?
     var body: some View {
         if !(isShownOnboarding ?? false) {
-            OnboardingView()
+            OnboardingView(isShownOnboarding: $isShownOnboarding)
         } else {
-            Color.brown
+            MainView()
         }
     }
 }
