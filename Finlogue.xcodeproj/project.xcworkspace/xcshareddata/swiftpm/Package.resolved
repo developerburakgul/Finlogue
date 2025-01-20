@@ -1,0 +1,15 @@
+{
+  "originHash" : "fea5a05d7ab1b9b4e5232a7f59eeac6c69c0db4ea14ba2644833f9608070dd02",
+  "pins" : [
+    {
+      "identity" : "obcalendar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/oBilet/OBCalendar",
+      "state" : {
+        "revision" : "8e7dceac81da3ee368cc2c1fa715f381951613c4",
+        "version" : "0.2.1"
+      }
+    }
+  ],
+  "version" : 3
+}

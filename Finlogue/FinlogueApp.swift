@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct FinlogueApp: App {
@@ -13,5 +14,6 @@ struct FinlogueApp: App {
         WindowGroup {
             IntroView()
         }
+        .modelContainer(for: Bank.self)
     }
 }

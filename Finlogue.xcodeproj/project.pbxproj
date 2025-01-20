@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		235B0F1B2D3D569000F422DA /* ObiletCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 235B0F1A2D3D569000F422DA /* ObiletCalendar */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		238CC58C2D340E6500295B1B /* Finlogue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Finlogue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				235B0F1B2D3D569000F422DA /* ObiletCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = Finlogue;
 			packageProductDependencies = (
+				235B0F1A2D3D569000F422DA /* ObiletCalendar */,
 			);
 			productName = Finlogue;
 			productReference = 238CC58C2D340E6500295B1B /* Finlogue.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 238CC5832D340E6500295B1B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				235B0F192D3D569000F422DA /* XCRemoteSwiftPackageReference "OBCalendar" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 238CC58D2D340E6500295B1B /* Products */;
 			projectDirPath = "";
@@ -324,6 +333,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		235B0F192D3D569000F422DA /* XCRemoteSwiftPackageReference "OBCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/oBilet/OBCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		235B0F1A2D3D569000F422DA /* ObiletCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 235B0F192D3D569000F422DA /* XCRemoteSwiftPackageReference "OBCalendar" */;
+			productName = ObiletCalendar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 238CC5842D340E6500295B1B /* Project object */;
 }

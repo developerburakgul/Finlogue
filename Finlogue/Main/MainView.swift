@@ -12,29 +12,25 @@ struct MainView: View {
     var body: some View {
         TabView{
             
-            Tab("Dashboard", systemImage: "chart.pie") {
-                settingsView
+            Tab("Home", systemImage: "house") {
+                HomeView()
                     .tag(0)
             }
             
-            Tab("Transactions", systemImage: "list.bullet.rectangle") {
+            Tab("Dashboard", systemImage: "chart.pie") {
                 settingsView
                     .tag(1)
             }
+        
             
-            Tab("Analytics", systemImage: "chart.bar") {
-                settingsView
+            Tab("Accounts", systemImage: "wallet.bifold.fill") {
+                BankListView()
                     .tag(2)
             }
             
-            Tab("Accounts", systemImage: "creditcard") {
-                settingsView
+            Tab("Profile", systemImage: "person") {
+                SettingsView()
                     .tag(3)
-            }
-            
-            Tab("Settings", systemImage: "gear") {
-                settingsView
-                    .tag(4)
             }
             
             
