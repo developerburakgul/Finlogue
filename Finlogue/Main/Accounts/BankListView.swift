@@ -30,42 +30,52 @@ struct BankListView: View {
                 CreateBankView()
                     .presentationDetents([.fraction(0.33)])
             }
-            
+            .navigationDestination(for: Bank.self) { bank in
+                BankView(bank: bank)
+            }
             .navigationTitle("My Banks")
+            .safeAreaInset(edge: .bottom, alignment: .center) {
+                Button {
+                    isShowCreateBankView = true
+                } label: {
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 70, height: 70)
+                        .overlay(
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .imageScale(.large)
+                        )
+                }
+                .padding()
+            }
         }
-        
-        
-        
     }
     
     private var emptyView: some View {
         VStack {
             Spacer()
             ContentUnavailableView("Add bank account", systemImage: "dollarsign.bank.building", description: Text("Descripiton"))
-            
-            Button {
-                isShowCreateBankView = true
-            } label: {
-                Circle()
-                    .fill(Color.black)
-                    .frame(width: 70, height: 70)
-                    .overlay(
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
-                            .imageScale(.large)
-                    )
-            }
             Spacer()
-
         }
-        
-        
     }
     
     private var bankListView: some View {
         List {
             ForEach(banks) { bank in
-                Text(bank.name)
+                NavigationLink(value: bank) {
+                    Text(bank.name)
+                }
+            }
+            .onDelete(perform: deleteBank)
+        }
+    }
+    
+    private func deleteBank(at offsets: IndexSet) {
+        for index in offsets {
+            let deleteItem = banks[index]
+            withAnimation {
+                context.delete(deleteItem)
             }
         }
     }
