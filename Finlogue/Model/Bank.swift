@@ -12,10 +12,13 @@ import SwiftData
 class Bank: Identifiable, Hashable{
     @Attribute(.unique) var id: UUID
     @Attribute var name: String
+    @Attribute var netAmount: Double
+    var iconName: String = "heart"
     
-    init(id: UUID = UUID(), name: String) {
+    init(id: UUID = UUID(), name: String, netAmount: Double = 0) {
         self.id = id
         self.name = name
+        self.netAmount = netAmount
     }
     
     static func == (lhs: Bank, rhs: Bank) -> Bool {

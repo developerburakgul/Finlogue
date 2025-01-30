@@ -16,4 +16,8 @@ struct FinlogueApp: App {
         }
         .modelContainer(for: Bank.self)
     }
+    
+    init() {
+        print(URL.documentsDirectory.path(percentEncoded: true))
+    }
 }

@@ -64,11 +64,12 @@ struct BankListView: View {
         List {
             ForEach(banks) { bank in
                 NavigationLink(value: bank) {
-                    Text(bank.name)
+                    BankListItemView(bank: bank)
                 }
             }
             .onDelete(perform: deleteBank)
         }
+//        .listStyle()
     }
     
     private func deleteBank(at offsets: IndexSet) {
