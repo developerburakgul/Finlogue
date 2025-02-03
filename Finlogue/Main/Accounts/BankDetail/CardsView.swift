@@ -8,8 +8,51 @@
 import SwiftUI
 
 struct CardsView: View {
+    @State var isShowAddCardView: Bool = false
     var body: some View {
-        ScrollView {
+        VStack {
+            addCardButton
+                .padding(.top)
+                .onTapGesture {
+                    print("Burak")
+                    isShowAddCardView = true
+                }
+            cardList
+        }
+        .sheet(isPresented: $isShowAddCardView) {
+            CreateCardView()
+        }
+
+    }
+    
+    private var addCardButton: some View {
+        VStack(spacing: 4) {
+            Image(systemName: "plus")
+                .imageScale(.large)
+            Text("Add Card")
+        }
+        .padding(.vertical)
+        .frame(maxWidth: .infinity)
+        .background(
+            addCardButtonBackground
+        )
+        
+    }
+    
+    private var addCardButtonBackground: some View {
+        RoundedRectangle(cornerRadius: 4)
+            .stroke(
+                Color.black,
+                style: StrokeStyle(
+                    lineWidth: 1.5,
+                    dash: [8]
+                )
+            )
+            .padding(.horizontal)
+    }
+    
+    private var cardList: some View {
+        return ScrollView {
             ForEach(0..<10, id: \.self) { item in
                 CardView(card: Card.getRandomCard())
             }
@@ -18,10 +61,15 @@ struct CardsView: View {
 }
 
 #Preview("1") {
-    CardsView()
+    NavigationStack {
+        CardsView()
+    }
+    
 }
 #Preview("2") {
-    BankView(
-        bank: Bank(name: "Deneme")
-    )
+    NavigationStack {
+        BankView(
+            bank: Bank(name: "Deneme")
+        )
+    }
 }

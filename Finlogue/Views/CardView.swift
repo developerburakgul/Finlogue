@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 
 struct CardView: View {
+    @State var isGoToCreateCard: Bool = false
     let card: Card
     init(card: Card) {
         self.card = card
@@ -17,6 +18,9 @@ struct CardView: View {
             HStack {
                 Image(systemName: "chart.bar.xaxis")
                     .imageScale(.large)
+                    .onTapGesture {
+                        isGoToCreateCard = true
+                    }
                 Spacer()
                 Text(card.cardType.name)
                     .bold()
@@ -40,6 +44,11 @@ struct CardView: View {
             
             
         }
+        .sheet(isPresented: $isGoToCreateCard) {
+            RoundedRectangle(cornerRadius: 3)
+                .fill(Color.red)
+                .frame(maxWidth: .infinity)
+        }
         .padding()
         .frame(height: 200)
         .background(
@@ -48,9 +57,10 @@ struct CardView: View {
                     style: .systemThinMaterialDark
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         )
         .padding() // Dış padding
+        
     }
     
     @ViewBuilder

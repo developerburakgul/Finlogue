@@ -37,6 +37,7 @@ struct BankView: View {
                     .tag(Tabs.accounts)
                 CardsView()
                     .tag(Tabs.cards)
+                    .toolbarVisibility(.hidden, for: .tabBar)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Kaydırma desteği
     }
