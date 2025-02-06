@@ -8,98 +8,155 @@
 import SwiftUI
 
 struct CreateCardView: View {
-    
-    enum FocusableTextFields: Hashable {
+    @Environment(\.dismiss) var dismiss
+    enum FocusableItems: Hashable {
         case cardNumber, expireDate, cvv
     }
-    @State var cardNumber: String = "Burak"
+    @State var cardNumber: String = ""
     @State var expireDate: String = ""
     @State var cvv: String = ""
-    @FocusState var focusedTextField: FocusableTextFields?
+    @State var isShowExpireDate: Bool = false
+    
+    @State private var selectedDate = Date()
+    @FocusState var focusedItem: FocusableItems?
+    @State var selectedMonth: Months = .january
+    @State var selectedYear: Int = Date().getCurrentYear
+    
+    
+    
+    @State var selectedCardType: CardType?
+    @State var cardLimit: String = ""
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            cardTypeSelectionView
+            cardLimitView
             cardNumberView
             HStack {
                 expireDateView
+                    .sheet(isPresented: $isShowExpireDate) {
+                        self.expireDatePicker
+                    }
                 Spacer()
                 cvvView
             }
+            
         }
+        .navigationTitle("Add Card")
+        
+    }
+    
+    private var cardTypeSelectionView: some View {
+        
+        
+        Menu {
+            Picker("", selection: $selectedCardType) {
+                ForEach(CardType.allCases, id: \.self) { type in
+                    Text(type.name).tag(type)
+                }
+            }
+        } label: {
+            CustomView(
+                focusState: .constant(true),
+                title: "Card Type") {
+                    Image(systemName: "creditcard.and.123")
+                } content: {
+        
+                    Text(selectedCardType?.name ?? "Select Card Type")
+                }
+                
+        }
+
+    }
+    
+    private var cardLimitView: some View {
+        CustomView(
+            focusState: .constant(false),
+            title: "Card Limit") {
+                Image("xmark")
+            } content: {
+                TextField("Enter your card limit", text: $cardLimit)
+                    .keyboardType(.numberPad)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            
+                            Spacer()
+                            Text("Go")
+                                .onTapGesture {
+                                    // to do go to other field
+                                }
+                        }
+                        
+                        
+                    }
+            }
+
     }
     
     private var cardNumberView: some View {
-        BGTextField(
-            text: Binding(
-                get: { cardNumber },
-                set: { newValue, _ in
-                    cardNumber = "2"
-                }
-            ),
-            title: "Card Number",
-            placeholder: "**** **** **** ****"
-        )
-        .focused($focusedTextField, equals: .cardNumber)
-        .keyboardType(.decimalPad)
-        .submitLabel(.go)
-        .onSubmit {
-            // validate for card number for example has it 16 digit
-            nextFocusState()
-            
-        }
-        
-    
+        CustomView(
+            focusState: .constant(false),
+            title: "Card Number") {
+            } content: {
+                TextField("**** **** **** ****", text: $cardNumber)
+                    .keyboardType(.numberPad)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            
+                            Spacer()
+                            Text("Go")
+                                .onTapGesture {
+                                    // to do go to other field
+                                }
+                        }
+                        
+                        
+                    }
+            }
     }
     
     private var expireDateView: some View {
-        BGTextField(
-            text: $expireDate,
-            title: "Expire Date",
-            placeholder: "MM/YY",
-            image: Image(systemName: "calendar")) {
-                print("Burak")
+        
+        CustomView(
+            focusState: .constant(false),
+            title: "Expire Date") {
+                Image(systemName: "calendar")
+                    .onTapGesture {
+                        isShowExpireDate.toggle()
+                    }
+            } content: {
+                Text("Burak")
+                    .onTapGesture {
+                        isShowExpireDate.toggle()
+                    }
             }
-            .focused($focusedTextField, equals: .expireDate)
-            .onSubmit {
-                nextFocusState()
-            }
-            
+        
     }
     
     private var cvvView: some View {
-        BGTextField(
-            text: $cvv,
-            title: "Cvv",
-            placeholder: "***",
-            image: Image(systemName: "info.circle")) {
-                print("Burak")
-            }
-            .focused($focusedTextField, equals: .cvv)
-            .onSubmit {
-                nextFocusState()
+        CustomView(
+            focusState: .constant(false),
+            title: "Cvv") {
+                Image(systemName: "info.circle")
+            } content: {
+                TextField("***", text: $cvv)
+                    .keyboardType(.namePhonePad)
             }
     }
     
     
-    private func nextFocusState() {
-        switch focusedTextField {
-        case .cardNumber:
-            focusedTextField = .expireDate
-        case .expireDate:
-            focusedTextField = .cvv
-        case .cvv:
-            focusedTextField = nil
-        case nil:
-            focusedTextField = nil
-        }
+    private var expireDatePicker: some View {
+        ExpireDatePicker(
+            selectedMonth: $selectedMonth,
+            selectedYear: $selectedYear
+        )
     }
-    
-
-
-
     
     
 }
 
 #Preview {
-    CreateCardView()
+    NavigationStack {
+        CreateCardView()
+    }
 }

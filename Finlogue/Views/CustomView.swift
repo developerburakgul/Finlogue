@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct CustomView<ImageContent: View, MainContent: View>: View {
-    
     @Binding var focusState: Bool
     var title: String = "Title"
     var focusBorderColor: Color = .black
     var unFocusBorderColor: Color = .gray
     var imageContent: ImageContent?
     var content: MainContent
-    
     init(
         focusState: Binding<Bool>,
         title: String,
@@ -35,22 +33,30 @@ struct CustomView<ImageContent: View, MainContent: View>: View {
         ZStack(alignment: .topLeading) {
             HStack {
                 content
+                    .foregroundColor(
+                        focusState
+                        ? focusBorderColor
+                        : unFocusBorderColor
+                    )
                 if let imageContent {
                     Spacer()
                     imageContent
+                        .foregroundColor(
+                            focusState
+                            ? focusBorderColor
+                            : unFocusBorderColor
+                        )
                 }
             }
             .padding()
-            
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
                         focusState ? focusBorderColor : unFocusBorderColor,
                         lineWidth: 1
                     )
-                    
             }
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundColor(
@@ -62,8 +68,6 @@ struct CustomView<ImageContent: View, MainContent: View>: View {
                 .background(Color(UIColor.systemBackground))
                 .offset(x: 0, y: -8)
                 .scaleEffect(0.9, anchor: .trailing)
-
-            
         }
         .padding()
     }
@@ -80,7 +84,6 @@ struct CustomView<ImageContent: View, MainContent: View>: View {
         unFocusBorderColor: .gray
         ) {
             Image(systemName: "apple.logo")
-                .foregroundColor(isFocused ? .black : .gray)
                 .onTapGesture {
                     isFocused.toggle()
                 }

@@ -11,14 +11,18 @@ struct CardsView: View {
     @State var isShowAddCardView: Bool = false
     var body: some View {
         VStack {
-            addCardButton
-                .padding(.top)
-                .onTapGesture {
-                    print("Burak")
-                    isShowAddCardView = true
-                }
+            
+            NavigationLink {
+                CreateCardView()
+            } label: {
+                addCardButton
+                    .padding(.top)
+            }
+
             cardList
         }
+        
+
         .sheet(isPresented: $isShowAddCardView) {
             CreateCardView()
         }

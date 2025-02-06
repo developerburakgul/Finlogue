@@ -27,7 +27,7 @@ class Card {
     
     
 }
-enum CardType: String {
+enum CardType: String, CaseIterable {
     case credit, debit
     var name: String {
         self.rawValue.capitalized
