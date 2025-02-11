@@ -12,8 +12,9 @@ import SwiftData
 class Bank: Identifiable, Hashable{
     @Attribute(.unique) var id: UUID
     @Attribute var name: String
-    @Attribute var netAmount: Double
+//    @Attribute var netAmount: Double // Bu en son computed property olmalı.
     var iconName: String = "heart"
+    var accounts: [Account] = []
     
     init(id: UUID = UUID(), name: String, netAmount: Double = 0) {
         self.id = id
