@@ -9,11 +9,12 @@ import SwiftUI
 
 struct CardsView: View {
     @State var isShowAddCardView: Bool = false
+    let bank: Bank
     var body: some View {
         VStack {
             
             NavigationLink {
-                CreateCardView()
+                CreateCardView(bank: bank)
             } label: {
                 addCardButton
                     .padding(.top)
@@ -21,12 +22,6 @@ struct CardsView: View {
 
             cardList
         }
-        
-
-        .sheet(isPresented: $isShowAddCardView) {
-            CreateCardView()
-        }
-
     }
     
     private var addCardButton: some View {
@@ -58,7 +53,8 @@ struct CardsView: View {
     private var cardList: some View {
         return ScrollView {
             ForEach(0..<10, id: \.self) { item in
-                CardView(card: Card.getRandomCard())
+//                CardView(card: Card.getRandomCard())
+                Text("BB")
             }
         }
     }
@@ -66,7 +62,7 @@ struct CardsView: View {
 
 #Preview("1") {
     NavigationStack {
-        CardsView()
+        CardsView(bank: Bank.getRandomBank())
     }
     
 }

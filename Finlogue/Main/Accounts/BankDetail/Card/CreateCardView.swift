@@ -11,6 +11,8 @@ public enum FocusableItems: Hashable {
 }
 struct CreateCardView: View {
     @Environment(\.dismiss) var dismiss
+    
+    let bank: Bank
     @State var selectedCardType: CardType?
     @State var cardLimitText: String = ""
     @State var cardNumberText: String = ""
@@ -88,18 +90,19 @@ struct CreateCardView: View {
     }
     
     private var cardView: some View {
-        CardView(
-            card: Card(
-                cardType:
-                    selectedCardType == nil ? .debit : selectedCardType!,
-                cardNumber: cardNumberText == "" ? "**** **** **** ****" : cardNumberText,
-                currentBalance: 0,
-                overlayColorData: backgroundColor.toData(),
-                textColorData: textColor.toData(),
-                expireDate: expireDate
-            ),
-            showCardDetailLogo: false
-        )
+//        CardView(
+//            card: Card(
+//                cardType:
+//                    selectedCardType == nil ? .debit : selectedCardType!,
+//                cardNumber: cardNumberText == "" ? "**** **** **** ****" : cardNumberText,
+//                currentBalance: 0,
+//                overlayColorData: backgroundColor.toData(),
+//                textColorData: textColor.toData(),
+//                expireDate: expireDate
+//            ),
+//            showCardDetailLogo: false
+//        )
+        Text("B")
     }
     
     private var cardTypeSelectionView: some View {
@@ -316,6 +319,6 @@ struct CreateCardView: View {
 
 #Preview {
     NavigationStack {
-        CreateCardView()
+        CreateCardView(bank: Bank.getRandomBank())
     }
 }

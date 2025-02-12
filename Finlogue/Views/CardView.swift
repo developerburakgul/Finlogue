@@ -23,7 +23,7 @@ struct CardView: View {
             )
             
             // Renk overlay
-            Color(card.overlayColor)
+//            Color(card.overlayColor)
             
             // İçerik
             content
@@ -48,7 +48,7 @@ struct CardView: View {
         }
         .padding()
         .frame(height: 200)
-        .foregroundColor(card.textColor)
+//        .foregroundColor(card.textColor)
     }
     
     private var headerView: some View {
@@ -162,6 +162,6 @@ struct CardView: View {
 
 
 
-#Preview {
-    CardView(card: Card.getRandomCard())
-}
+//#Preview {
+//    CardView(card: Card.getRandomCard())
+//}

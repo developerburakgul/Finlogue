@@ -8,22 +8,35 @@
 import SwiftUI
 
 struct AccountsView: View {
+    var bank: Bank
+    
+    init(bank: Bank) {
+        self.bank = bank
+    }
+    
     var body: some View {
         List {
-            Section("Vadesiz Hesaplarım (10)") {
-                ForEach(0..<10) { int in
-                    Text("\(int)")
+            Section(AccountType.cashAccount.rawValue) {
+                ForEach(bank.accounts) { account in
+                    if account.accountType == .cashAccount {
+                        Text(account.name)
+                    }
                 }
             }
-            Section("Yatırım Hesaplarım") {
-                ForEach(0..<3) { int in
-                    Text("\(int)")
+            
+            Section(AccountType.investmentAccount.rawValue) {
+                ForEach(bank.accounts) { account in
+                    if account.accountType == .investmentAccount {
+                        Text(account.name)
+                    }
                 }
             }
         }
+        .listStyle(.insetGrouped)
     }
+    
 }
 
 #Preview {
-    AccountsView()
+    return AccountsView(bank: Bank.getRandomBank())
 }

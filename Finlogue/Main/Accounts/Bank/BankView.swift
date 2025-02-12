@@ -33,9 +33,9 @@ struct BankView: View {
             .padding()
             
             TabView(selection: $selectedTab) {
-                AccountsView()
+                AccountsView(bank: Bank.getRandomBank())
                     .tag(Tabs.accounts)
-                CardsView()
+                CardsView(bank: Bank.getRandomBank())
                     .tag(Tabs.cards)
                     .toolbarVisibility(.hidden, for: .tabBar)
             }

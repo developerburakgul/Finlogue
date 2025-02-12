@@ -8,16 +8,22 @@
 import Foundation
 import SwiftData
 
+
+enum AccountType: String, CaseIterable,Codable {
+    case cashAccount, investmentAccount
+}
+
 @Model
 class Account {
     @Attribute(.unique)
     var id: UUID
+    
     var name: String
     var accountType: AccountType
     var bank: Bank?
-    var bankCards: [BankCard] = []
+    var bankCards: [BankCard]
     
-    init(name: String, accountType: AccountType, bank: Bank? = nil, bankCards: [BankCard]) {
+    init(name: String, accountType: AccountType, bank: Bank? = nil, bankCards: [BankCard] = []) {
         self.id = UUID()
         self.name = name
         self.accountType = accountType
@@ -25,9 +31,28 @@ class Account {
         self.bankCards = bankCards
     }
     
+    var netAmount: Double {
+        return 0
+    }
+}
+
+extension Account {
+    static func getRandomAccount(time: Int) -> [Account] {
+        var arr = [Account]()
+        for i in 0...time {
+            arr.append(Account(name: "\(i) account", accountType: i % 2 == 0 ? .cashAccount : .investmentAccount ))
+        }
+        return arr
+    }
 }
 
 
+enum CardType: String, CaseIterable {
+    case credit, debit
+    var name: String {
+        self.rawValue.capitalized
+    }
+}
 
 @Model
 class BankCard {
@@ -74,17 +99,6 @@ class CreditCard {
         self.limit = limit
         self.expireDate = expireDate
         self.bank = bank
-    }
-}
-
-enum AccountType: String, CaseIterable {
-    case cashAccount, investmentAccount
-}
-
-enum CardType: String, CaseIterable {
-    case credit, debit
-    var name: String {
-        self.rawValue.capitalized
     }
 }
 
