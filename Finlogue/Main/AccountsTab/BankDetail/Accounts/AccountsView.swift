@@ -9,17 +9,42 @@ import SwiftUI
 
 struct AccountsView: View {
     var bank: Bank
+    @State var shouldShowCreateAccountView: Bool = false
     
     init(bank: Bank) {
         self.bank = bank
     }
     
     var body: some View {
-        if countOfAllAccountTypes() == 0 {
-            emptyView
-        } else {
-            accountListView
+        Group {
+            if countOfAllAccountTypes() == 0 {
+                emptyView
+            } else {
+                accountListView
+            }
         }
+        .sheet(isPresented: $shouldShowCreateAccountView) {
+            CreateAccountView(bank: bank)
+                .presentationDetents([.fraction(0.33)])
+        }
+        .navigationDestination(for: Bank.self) { bank in
+            BankView(bank: bank)
+        }
+        .safeAreaInset(edge: .bottom, alignment: .trailing) {
+                Button {
+                    shouldShowCreateAccountView = true
+                } label: {
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 70, height: 70)
+                        .overlay(
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .imageScale(.large)
+                        )
+                }
+                .padding()
+            }
     }
     
     private var emptyView: some View {
@@ -44,6 +69,7 @@ struct AccountsView: View {
                 }
             }
         }
+        .scrollIndicators(.never)
     }
     
     func getAccountTypeHeaderText(_ accountType: AccountType) -> String {
@@ -71,5 +97,7 @@ struct AccountsView: View {
 }
 
 #Preview {
-    return AccountsView(bank: Bank.getRandomBank(accountCount: 1))
+    return NavigationStack {
+        AccountsView(bank: Bank.getRandomBank(accountCount: 0))
+    }
 }

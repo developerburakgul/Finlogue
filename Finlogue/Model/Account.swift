@@ -12,6 +12,14 @@ import SwiftUI
 
 enum AccountType: String, CaseIterable,Codable {
     case cashAccount, investmentAccount
+    var name: String {
+        switch self {
+        case .cashAccount:
+            "Vadesiz Hesap"
+        case .investmentAccount:
+            "Yatırım Hesabı"
+        }
+    }
 }
 
 @Model
