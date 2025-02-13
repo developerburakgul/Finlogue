@@ -41,10 +41,10 @@ class Bank: Identifiable, Hashable{
 }
 
 extension Bank {
-    static func getRandomBank() -> Bank {
+    static func getRandomBank(accountCount: Int = 0) -> Bank {
         Bank(
             name: "Random Bank \(Int.random(in: 1...1000))",
-            accounts: Account.getRandomAccount(time: 20)
+            accounts: Account.getRandomAccount(time: accountCount)
         )
     }
 }

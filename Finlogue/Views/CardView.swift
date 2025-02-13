@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CardView: View {
     @State var isGoToCreateCard: Bool = false
-    let card: Card
+    let bankCard: DebitCard
     var showCardDetailLogo: Bool = true
-    init(card: Card, showCardDetailLogo: Bool = true) {
-        self.card = card
+    init(bankCard: DebitCard, showCardDetailLogo: Bool = true) {
+        self.bankCard = bankCard
         self.showCardDetailLogo = showCardDetailLogo
     }
     
@@ -23,7 +23,7 @@ struct CardView: View {
             )
             
             // Renk overlay
-//            Color(card.overlayColor)
+            Color(bankCard.overlayColorData.toColor())
             
             // İçerik
             content
@@ -48,7 +48,7 @@ struct CardView: View {
         }
         .padding()
         .frame(height: 200)
-//        .foregroundColor(card.textColor)
+        .foregroundColor(bankCard.textColorData.toColor())
     }
     
     private var headerView: some View {
@@ -61,14 +61,14 @@ struct CardView: View {
                     }
             }
             Spacer()
-            Text(card.cardType.name)
+            Text("\(bankCard.cardType.name)")
                 .bold()
         }
     }
     
     private var cardNumberSection: some View {
         HStack {
-            if let cardNumber = card.cardNumber {
+            if let cardNumber = bankCard.cardNumber {
                 Text(cardNumber)
                     .font(.title2)
                     .bold()
@@ -89,7 +89,7 @@ struct CardView: View {
             HStack(alignment: .top, spacing: 0) {
                 Text("$")
                     .font(.caption2)
-                Text(card.currentBalance.formatted())
+                Text(bankCard.currentBalance.formatted())
                     .bold()
                     .font(.title3)
             }
@@ -100,7 +100,7 @@ struct CardView: View {
         HStack(alignment: .bottom, spacing: 0) {
             currentBalance
             Spacer()
-            Text(DateFormatter.expireDateString(for: card.expireDate))
+            Text(DateFormatter.expireDateString(for: bankCard.expireDate))
                 .bold()
         }
     }
@@ -162,6 +162,6 @@ struct CardView: View {
 
 
 
-//#Preview {
-//    CardView(card: Card.getRandomCard())
-//}
+#Preview {
+    CardView(bankCard: DebitCard.getMockBankCard())
+}

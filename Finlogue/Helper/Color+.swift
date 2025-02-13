@@ -22,19 +22,6 @@ extension Color {
             return Data() // Fallback boş data
         }
     }
-    
-    static func fromData(_ data: Data) -> Color {
-        do {
-            guard let uiColor = try NSKeyedUnarchiver.unarchivedObject(
-                ofClass: UIColor.self,
-                from: data
-            ) else {
-                return .white // Varsayılan renk
-            }
-            return Color(uiColor)
-        } catch {
-            print("Data → Color dönüşüm hatası: \(error)")
-            return .white // Fallback rengi
-        }
-    }
 }
+
+
