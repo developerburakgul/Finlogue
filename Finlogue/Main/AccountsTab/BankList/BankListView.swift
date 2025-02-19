@@ -9,18 +9,14 @@ import SwiftUI
 import SwiftData
 
 struct BankListView: View {
-    @Environment(\.modelContext) private var context
-    @Query(sort: \Bank.name) private var banks: [Bank]
+
     @State private var isShowCreateBankView: Bool = false
+    @StateObject var viewModel: BankListViewModel = .init()
     
-    //MARK: - Computed properties
-    private var banksIsEmpty: Bool {
-        banks.isEmpty
-    }
     var body: some View {
         NavigationStack {
             Group{
-                if banksIsEmpty {
+                if viewModel.bankListIsEmpty {
                     emptyView
                 } else {
                     bankListView
@@ -29,9 +25,13 @@ struct BankListView: View {
             .sheet(isPresented: $isShowCreateBankView) {
                 CreateBankView()
                     .presentationDetents([.fraction(0.33)])
+                    .onDisappear {
+                        viewModel.loadBanks()
+                    }
             }
             .navigationDestination(for: Bank.self) { bank in
                 BankView(bank: bank)
+                    
             }
             .navigationTitle("My Banks")
             .safeAreaInset(edge: .bottom, alignment: .center) {
@@ -62,55 +62,16 @@ struct BankListView: View {
     
     private var bankListView: some View {
         List {
-            ForEach(banks) { bank in
+            ForEach(viewModel.banks) { bank in
                 NavigationLink(value: bank) {
                     BankListItemView(bank: bank)
                 }
             }
-            .onDelete(perform: deleteBank)
+            .onDelete(perform: viewModel.deleteBank)
         }
 //        .listStyle()
     }
-    
-    private func deleteBank(at offsets: IndexSet) {
-        for index in offsets {
-            let deleteItem = banks[index]
-            withAnimation {
-                context.delete(deleteItem)
-            }
-        }
-    }
-}
 
-struct BankListItemView: View {
-    let bank: Bank
-    var isPositiveNetAmount: Bool {
-        bank.netAmount > 0
-    }
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: bank.iconName)
-                .imageScale(.large)
-            
-            Text(bank.name)
-                .font(.title2)
-                .fontWeight(.medium)
-            Spacer()
-            Text("\(bank.netAmount)" + " " + "$")
-                .foregroundColor(
-                    isPositiveNetAmount
-                    ? Color(UIColor.systemGreen)
-                    : Color(UIColor.systemRed)
-                )
-                .fontWeight(.bold)
-        }
-    }
-}
-
-#Preview {
-    BankListItemView(
-        bank: Bank(name: "Garanti Bankası")
-    )
 }
 
 #Preview {

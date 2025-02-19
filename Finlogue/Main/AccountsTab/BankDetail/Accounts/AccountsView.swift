@@ -45,6 +45,9 @@ struct AccountsView: View {
                 }
                 .padding()
             }
+        .onAppear {
+            print(countOfAllAccountTypes())
+        }
     }
     
     private var emptyView: some View {

@@ -10,16 +10,12 @@ import SwiftUI
 struct CreateBankView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
-    @State var name: String = ""
-    
-    private var isDisableCreateButton: Bool {
-        name.isEmpty
-    }
+    @StateObject var viewModel: CreateBankViewModel = .init()
     
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Enter your bank name here ...", text: $name)
+                TextField("Enter your bank name here ...", text: $viewModel.name)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -30,11 +26,11 @@ struct CreateBankView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Create") {
                         //MARK: - TODO
-                        let bank = Bank(name: name)
-                        context.insert(bank)
+                        let bank = Bank(name: viewModel.name)
+                        viewModel.create(bank)
                         dismiss()
                     }
-                    .disabled(isDisableCreateButton)
+                    .disabled(viewModel.name.isEmpty)
                 }
             }
         }

@@ -14,7 +14,7 @@ struct FinlogueApp: App {
         WindowGroup {
             IntroView()
         }
-        .modelContainer(for: Bank.self)
+//        .modelContainer(for: Bank.self)
     }
     
     init() {

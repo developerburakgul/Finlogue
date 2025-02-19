@@ -14,6 +14,7 @@ class Bank: Identifiable, Hashable{
     @Attribute var name: String
     //    @Attribute var netAmount: Double // Bu en son computed property olmalı.
     var iconName: String = "heart"
+    @Relationship(deleteRule: .cascade,inverse: \Account.bank)
     var accounts: [Account] = []
     var creditCards: [CreditCard] = []
     
