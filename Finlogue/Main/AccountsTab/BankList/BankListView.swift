@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct BankListView: View {
-
+    
     @State private var isShowCreateBankView: Bool = false
     @StateObject var viewModel: BankListViewModel = .init()
     
@@ -30,7 +30,7 @@ struct BankListView: View {
                     }
             }
             .navigationDestination(for: Bank.self) { bank in
-                BankView(bank: bank)
+                BankView(bankViewModel: BankViewModel(bank: bank))
                     
             }
             .navigationTitle("My Banks")

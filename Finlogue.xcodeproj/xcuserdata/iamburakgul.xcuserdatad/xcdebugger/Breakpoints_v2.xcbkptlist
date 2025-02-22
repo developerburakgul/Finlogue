@@ -23,17 +23,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "140F925B-5271-45EC-9D18-C21A5DB8B7E8"
-            shouldBeEnabled = "Yes"
+            uuid = "314B0CC9-1EB6-4086-A498-EAAF44E7DA34"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Finlogue/Main/AccountsTab/BankDetail/Accounts/AccountsView.swift"
+            filePath = "Finlogue/Main/AccountsTab/BankList/BankListViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
-            landmarkName = "accountListView"
-            landmarkType = "24">
+            startingLineNumber = "9"
+            endingLineNumber = "9"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

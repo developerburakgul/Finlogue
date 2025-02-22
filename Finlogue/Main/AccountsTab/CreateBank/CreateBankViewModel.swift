@@ -2,28 +2,30 @@
 //  CreateBankViewModel.swift
 //  Finlogue
 //
-//  Created by Burak Gül on 19.02.2025.
+//  Created by Burak Gül on 22.02.2025.
 //
 
 import Foundation
 
-
-final class CreateBankViewModel: ObservableObject {
+class CreateBankViewModel: ObservableObject {
     @Published var name: String = ""
-    private var bankService: BankServiceProtocol
+    private var bankService: CreateBankServiceProtocol
     
-    init(
-        bankService: BankServiceProtocol = BankService(
-            modelContainer: CustomModelContainer.container
-        )
-    ) {
+    init(bankService: CreateBankServiceProtocol = BankService(modelContainer: CustomModelContainer.container)) {
         self.bankService = bankService
     }
     
-    func create(_ bank: Bank){
-        Task { @MainActor in
-            try await bankService.add(bank)
-            
-        }
+    var isEmptyName: Bool {
+        name.isEmpty
     }
+    
+    func create(_ bank: Bank)  {
+        //
+        Task {
+             try await bankService.add(bank)
+        }
+        
+    }
+    
+    
 }

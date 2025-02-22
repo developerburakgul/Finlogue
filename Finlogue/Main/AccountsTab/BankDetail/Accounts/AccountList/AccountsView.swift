@@ -8,27 +8,25 @@
 import SwiftUI
 
 struct AccountsView: View {
-    var bank: Bank
     @State var shouldShowCreateAccountView: Bool = false
-    
-    init(bank: Bank) {
-        self.bank = bank
-    }
-    
+    @ObservedObject var viewModel: AccountsViewModel
     var body: some View {
         Group {
-            if countOfAllAccountTypes() == 0 {
+            if viewModel.countOfAllAccountTypes() == 0 {
                 emptyView
             } else {
                 accountListView
             }
         }
         .sheet(isPresented: $shouldShowCreateAccountView) {
-            CreateAccountView(bank: bank)
+            CreateAccountView(viewModel: viewModel.createAccountViewModel)
                 .presentationDetents([.fraction(0.33)])
+                .onDisappear {
+                    viewModel.loadAccounts()
+                }
         }
         .navigationDestination(for: Bank.self) { bank in
-            BankView(bank: bank)
+//            BankView(bank: bank)
         }
         .safeAreaInset(edge: .bottom, alignment: .trailing) {
                 Button {
@@ -46,7 +44,7 @@ struct AccountsView: View {
                 .padding()
             }
         .onAppear {
-            print(countOfAllAccountTypes())
+            print(viewModel.countOfAllAccountTypes())
         }
     }
     
@@ -61,22 +59,28 @@ struct AccountsView: View {
     private var accountListView: some View {
         List {
             ForEach(AccountType.allCases, id: \.self) { accountType in
-                if isThereAccount(type: accountType) {
+                if viewModel.isThereAccount(type: accountType) {
                     Section(getAccountTypeHeaderText(accountType)) {
-                        ForEach(bank.accounts) { account in
-                            if account.accountType == accountType {
-                                AccountView(account: account)
-                            }
-                        }
+                        getAccountViews(accountType: accountType)
                     }
                 }
             }
         }
         .scrollIndicators(.never)
+//        Text("Burak")
+        
+    }
+    
+    func getAccountViews(accountType: AccountType) -> some View{
+        return ForEach(viewModel.accounts) { account in
+            if account.accountType == accountType {
+                AccountView(account: account)
+            }
+        }
     }
     
     func getAccountTypeHeaderText(_ accountType: AccountType) -> String {
-        let accountCount = countOf(accountType: accountType)
+        let accountCount = viewModel.countOf(accountType: accountType)
         switch accountType {
         case .cashAccount:
             return "Vadesiz Hesaplarım" + (accountCount >= 1 ? " (\(accountCount))" : "")
@@ -85,22 +89,17 @@ struct AccountsView: View {
         }
     }
     
-    func countOf(accountType: AccountType) -> Int {
-        return bank.accounts.filter { $0.accountType == accountType }.count
-    }
+
     
-    func countOfAllAccountTypes() -> Int {
-        return bank.accounts.count
-    }
+
     
-    func isThereAccount(type: AccountType) -> Bool {
-        bank.accounts.contains { $0.accountType ==  type }
-    }
+
     
 }
 
-#Preview {
-    return NavigationStack {
-        AccountsView(bank: Bank.getRandomBank(accountCount: 0))
-    }
-}
+//#Preview {
+//    return NavigationStack {
+//        AccountsView()
+//            .environment(Bank.getRandomBank(accountCount: 20))
+//    }
+//}

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct CreateBankView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var context
     @StateObject var viewModel: CreateBankViewModel = .init()
+    
     
     var body: some View {
         NavigationStack {
@@ -30,13 +30,13 @@ struct CreateBankView: View {
                         viewModel.create(bank)
                         dismiss()
                     }
-                    .disabled(viewModel.name.isEmpty)
+                    .disabled(viewModel.isEmptyName)
                 }
             }
         }
     }
 }
 
-#Preview {
-    CreateBankView()
-}
+//#Preview {
+//    CreateBankView()
+//}

@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Bank: Identifiable, Hashable{
+class Bank: Identifiable, Hashable, ObservableObject{
     @Attribute(.unique) var id: UUID
     @Attribute var name: String
     //    @Attribute var netAmount: Double // Bu en son computed property olmalı.
@@ -30,6 +30,11 @@ class Bank: Identifiable, Hashable{
         self.iconName = iconName
         self.accounts = accounts
         self.creditCards = creditCards
+    }
+    
+    func addAccount(_ account: Account) {
+        accounts.append(account)
+        account.bank = self
     }
     
     static func == (lhs: Bank, rhs: Bank) -> Bool {

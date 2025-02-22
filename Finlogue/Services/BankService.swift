@@ -9,15 +9,18 @@ import Foundation
 import SwiftData
 
 
-protocol BankServiceProtocol {
+protocol BankListServiceProtocol {
     func getBanks() async throws -> [Bank]
     func delete(_ bank : Bank) async throws
+
+}
+
+protocol CreateBankServiceProtocol {
     func add(_ bank: Bank) async throws
 }
 
-
 @ModelActor
-actor BankService: BankServiceProtocol {
+actor BankService: BankListServiceProtocol, CreateBankServiceProtocol {
     @MainActor
     func getBanks() async throws -> [Bank] {
         do {
@@ -37,7 +40,7 @@ actor BankService: BankServiceProtocol {
             try modelContext.delete(
                 model: Bank.self,
                 where: #Predicate {
-                    return $0.id == bankId
+                    return $0.id == bankId 
                 }
             )
             try modelContext.save()

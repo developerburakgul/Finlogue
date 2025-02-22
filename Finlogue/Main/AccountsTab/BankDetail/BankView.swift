@@ -9,15 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct BankView: View {
-    
     enum Tabs: String, CaseIterable {
         case accounts = "Accounts"
         case cards = "Cards"
     }
-    
-    let bank: Bank
     @State var selectedTab: Tabs = .accounts
-
+    @ObservedObject var bankViewModel: BankViewModel
+    
     var body: some View {
             Picker("Bank", selection: $selectedTab) {
                 ForEach(Tabs.allCases, id: \.self) { item in
@@ -33,9 +31,10 @@ struct BankView: View {
             .padding()
             
             TabView(selection: $selectedTab) {
-                AccountsView(bank: Bank.getRandomBank())
+                AccountsView(viewModel: bankViewModel.accountsViewModel)
                     .tag(Tabs.accounts)
-                CardsView(bank: Bank.getRandomBank())
+                
+                CardsView(viewModel: bankViewModel.cardsViewModel)
                     .tag(Tabs.cards)
                     .toolbarVisibility(.hidden, for: .tabBar)
             }
@@ -43,11 +42,11 @@ struct BankView: View {
     }
 }
 
-#Preview {
-    BankView(
-        bank: Bank(name: "Deneme")
-    )
-}
+//#Preview {
+//    BankView(
+//        bank: Bank(name: "Deneme")
+//    )
+//}
 
 
 struct SegmentView: View {

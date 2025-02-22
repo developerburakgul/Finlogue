@@ -12,10 +12,9 @@ import SwiftData
 @MainActor
 class BankListViewModel: ObservableObject {
     @Published public private(set) var banks: [Bank] = []
+    private var bankService: BankListServiceProtocol
     
-    private var bankService: BankServiceProtocol
-    
-    init(bankService: BankServiceProtocol = BankService(modelContainer: CustomModelContainer.container)) {
+    init(bankService: BankListServiceProtocol = BankService(modelContainer: CustomModelContainer.container)) {
         self.bankService = bankService
         loadBanks()
     }

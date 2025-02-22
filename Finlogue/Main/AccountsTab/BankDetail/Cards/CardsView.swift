@@ -9,12 +9,14 @@ import SwiftUI
 
 struct CardsView: View {
     @State var isShowAddCardView: Bool = false
-    let bank: Bank
+//    let bank: Bank
+//    @Environment(Bank.self) private var bank: Bank
+    @ObservedObject var viewModel: CardsViewModel
     var body: some View {
         VStack {
             
             NavigationLink {
-                CreateCardView(bank: bank)
+//                CreateCardView(bank: bank)
             } label: {
                 addCardButton
                     .padding(.top)
@@ -60,16 +62,16 @@ struct CardsView: View {
     }
 }
 
-#Preview("1") {
-    NavigationStack {
-        CardsView(bank: Bank.getRandomBank())
-    }
-    
-}
-#Preview("2") {
-    NavigationStack {
-        BankView(
-            bank: Bank(name: "Deneme")
-        )
-    }
-}
+//#Preview("1") {
+//    NavigationStack {
+//        CardsView(bank: Bank.getRandomBank())
+//    }
+//    
+//}
+//#Preview("2") {
+//    NavigationStack {
+//        BankView(
+//            bank: Bank(name: "Deneme")
+//        )
+//    }
+//}

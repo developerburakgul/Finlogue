@@ -9,10 +9,12 @@ import SwiftUI
 
 struct CreateAccountView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var context
+//    @Environment(\.modelContext) private var context
+    @ObservedObject var viewModel: CreateAccountViewModel
+
+//    let bank: Bank
     @State var name: String = ""
     @State var accountType: AccountType = .cashAccount
-    let bank: Bank
     
     private var isDisableCreateButton: Bool {
         name.isEmpty
@@ -37,13 +39,7 @@ struct CreateAccountView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Create") {
                         //MARK: - TODO
-                        let account = Account(name: name, accountType: accountType, bank: bank)
-                        bank.accounts.append(account)
-                        do {
-                            try context.save()
-                        } catch {
-                            print(error)
-                        }
+                        viewModel.createAccount(name: name, accountType: accountType)
                         dismiss()
                     }
                     .disabled(isDisableCreateButton)
