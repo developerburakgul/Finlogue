@@ -37,6 +37,6 @@ struct CreateBankView: View {
     }
 }
 
-//#Preview {
-//    CreateBankView()
-//}
+#Preview {
+    CreateBankView()
+}

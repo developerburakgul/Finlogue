@@ -7,26 +7,23 @@
 
 import SwiftUI
 public enum FocusableItems: Hashable {
-    case cardType, cardLimit, cardNumber, expireDate, cvv, backgroundPicker, textColorPicker
+    case cardType, cardLimit, cardNumber, expireDateText, cvv, backgroundPicker, textColorPicker
 }
 struct CreateCardView: View {
     @Environment(\.dismiss) var dismiss
-    
-    let bank: Bank
-    @State var selectedCardType: CardType?
-    @State var cardLimitText: String = ""
-    @State var cardNumberText: String = ""
-    @State var cvvText: String = ""
-    
-    @State private var expireDate: Date?
-    @State var isShowExpireDate: Bool = false
-    @FocusState var focusedItem: FocusableItems?
-    
+
     @State var backgroundColor: Color = .gray
     @State var textColor: Color = .black
+    @State var cardNumberText: String = ""
+    @StateObject var viewModel: CreateCardViewModel
+    @FocusState var focusedItem: FocusableItems?
+    @State var selectedCardType: CardType?
+    @State var cardLimitText: String = ""
     
-   
-    
+    @State var cvvText: String = ""
+    @State var expireDate: Date? // TODO: kaldırılcak
+    @State var isShowExpireDate: Bool = false
+    @State var expireDateText: String = ""
     
     var body: some View {
         cardView
@@ -39,20 +36,13 @@ struct CreateCardView: View {
                 cardNumberView
                 HStack {
                     expireDateView
-                        .sheet(isPresented: $isShowExpireDate) {
-                            self.expireDatePicker
-                                .presentationDetents([.medium])
-//                                .presentationDragIndicator(.visible)
-                                .edgesIgnoringSafeArea(.all)
-                        }
-                    
                     Spacer()
                     cvvView
                 }
-                HStack {
-                    backgroundColorPicker
-                    textColorPicker
-                }
+//                HStack {
+//                    backgroundColorPicker
+//                    textColorPicker
+//                }
             }
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
@@ -65,10 +55,10 @@ struct CreateCardView: View {
                             }
                         case .cardNumber:
                             Button("Go") {
-                                focusedItem = .expireDate
+                                focusedItem = .expireDateText
                                 isShowExpireDate = true
                             }
-                        case .expireDate:
+                        case .expireDateText:
                             Button("Go") {
                                 focusedItem = .cvv
                             }
@@ -90,19 +80,16 @@ struct CreateCardView: View {
     }
     
     private var cardView: some View {
-//        CardView(
-//            card: Card(
-//                cardType:
-//                    selectedCardType == nil ? .debit : selectedCardType!,
-//                cardNumber: cardNumberText == "" ? "**** **** **** ****" : cardNumberText,
-//                currentBalance: 0,
-//                overlayColorData: backgroundColor.toData(),
-//                textColorData: textColor.toData(),
-//                expireDate: expireDate
-//            ),
-//            showCardDetailLogo: false
-//        )
-        Text("B")
+        return CreatingCardView(
+            overlayColor: $backgroundColor,
+            textColor: $textColor,
+            cardType: $selectedCardType,
+            cardNumber: $cardNumberText,
+            limitText: $cardLimitText,
+            expireDateText: $expireDateText,
+            cvvText: $cvvText
+        )
+        
     }
     
     private var cardTypeSelectionView: some View {
@@ -185,11 +172,10 @@ struct CreateCardView: View {
                     .keyboardType(.numberPad)
                     .focused($focusedItem, equals: .cardNumber)
                     .onChange(of: cardNumberText) { oldValue, newValue in
-                        let formattedValue = formatCardNumber(newValue)
+                        let formattedValue = viewModel.formatCardNumber(newValue)
                         if formattedValue != cardNumberText {
                             cardNumberText = formattedValue
                         }
-                        
                     }
             }
         
@@ -199,7 +185,7 @@ struct CreateCardView: View {
         
         CustomView(
             title: "Expire Date",
-            item: .expireDate,
+            item: .expireDateText,
             focus: $focusedItem,
             isValid: expireDate != nil) {
                 Image(systemName: "calendar")
@@ -207,9 +193,14 @@ struct CreateCardView: View {
                         isShowExpireDate.toggle()
                     }
             } content: {
-                Text(DateFormatter.expireDateString(for: expireDate))
-                    .onTapGesture {
-                        isShowExpireDate.toggle()
+                TextField("MM/YY", text: $expireDateText)
+                    .keyboardType(.namePhonePad)
+                    .focused($focusedItem, equals: .expireDateText)
+                    .onChange(of: expireDateText) { oldValue, newValue in
+                        let formattedValue = viewModel.formatExpireDateText(newValue)
+                        if formattedValue != expireDateText {
+                            expireDateText = formattedValue
+                        }
                     }
             }
         
@@ -228,40 +219,47 @@ struct CreateCardView: View {
                 TextField("***", text: $cvvText)
                     .keyboardType(.namePhonePad)
                     .focused($focusedItem, equals: .cvv)
+                    .onChange(of: cvvText) { oldValue, newValue in
+                        let formattedValue = viewModel.formatCVVText(newValue)
+                        if formattedValue != cvvText {
+                            cvvText = formattedValue
+                        }
+                    }
+
             }
         
     }
     
-    private var expireDatePicker: some View {
-        VStack(spacing: 0) {
-            // Header
-            HStack {
-                Text("Select Expiration Date")
-                    .font(.headline)
-                    .padding()
-                
-                Spacer()
-                
-                Button("Done") {
-                    isShowExpireDate = false
-                    focusedItem = .cvv
-                }
-                .padding()
-            }
-            .frame(height: 44) // Fixed height for header
-            .background(Color(UIColor.systemGray))
-            
-            // Picker
-            MonthYearWheelPicker(
-                monthTitle: .constant("Months"),
-                yearTitle: .constant("Years"),
-                date: .constant(Date.now)
-            )
-            .frame(maxHeight: .infinity)
-        }
-        .edgesIgnoringSafeArea(.top) // Bu satır önemli
-        .focused($focusedItem, equals: .expireDate)
-    }
+//    private var expireDatePicker: some View {
+//        VStack(spacing: 0) {
+//            // Header
+//            HStack {
+//                Text("Select Expiration Date")
+//                    .font(.headline)
+//                    .padding()
+//                
+//                Spacer()
+//                
+//                Button("Done") {
+//                    isShowExpireDate = false
+//                    focusedItem = .cvv
+//                }
+//                .padding()
+//            }
+//            .frame(height: 44) // Fixed height for header
+//            .background(Color(UIColor.systemGray))
+//            
+//            // Picker
+//            MonthYearWheelPicker(
+//                monthTitle: .constant("Months"),
+//                yearTitle: .constant("Years"),
+//                date: .constant(Date.now)
+//            )
+//            .frame(maxHeight: .infinity)
+//        }
+//        .edgesIgnoringSafeArea(.top) // Bu satır önemli
+//        .focused($focusedItem, equals: .expireDateText)
+//    }
     //
     private var backgroundColorPicker: some View {
         
@@ -300,25 +298,12 @@ struct CreateCardView: View {
             }
         }
     }
-    func formatCardNumber(_ number: String) -> String {
-        let filtered = number.filter { $0.isNumber}
-        var result = ""
-        for (index, character) in filtered.enumerated() {
-            if index != 0 && index % 4 == 0 {
-                result.append(" ")
-            }
-            result.append(character)
-        }
-        if result.count > 19 {
-            result = String(result.prefix(19))
-        }
-        return result
-    }
+
     
 }
 
 #Preview {
     NavigationStack {
-        CreateCardView(bank: Bank.getRandomBank())
+        CreateCardView(viewModel: .init(bank: Bank.getRandomBank()))
     }
 }

@@ -9,10 +9,11 @@ import SwiftUI
 
 struct CardView: View {
     @State var isGoToCreateCard: Bool = false
-    let bankCard: DebitCard
+    var cardModel: CardModelProtocol
     var showCardDetailLogo: Bool = true
-    init(bankCard: DebitCard, showCardDetailLogo: Bool = true) {
-        self.bankCard = bankCard
+
+    init(cardModel: CardModelProtocol, showCardDetailLogo: Bool) {
+        self.cardModel = cardModel
         self.showCardDetailLogo = showCardDetailLogo
     }
     
@@ -23,7 +24,7 @@ struct CardView: View {
             )
             
             // Renk overlay
-            Color(bankCard.overlayColorData.toColor())
+            Color(cardModel.overlayColorData.toColor())
             
             // İçerik
             content
@@ -48,7 +49,7 @@ struct CardView: View {
         }
         .padding()
         .frame(height: 200)
-        .foregroundColor(bankCard.textColorData.toColor())
+        .foregroundColor(cardModel.textColorData.toColor())
     }
     
     private var headerView: some View {
@@ -61,14 +62,14 @@ struct CardView: View {
                     }
             }
             Spacer()
-            Text("\(bankCard.cardType.name)")
+            Text("\(cardModel.cardType.name)")
                 .bold()
         }
     }
     
     private var cardNumberSection: some View {
         HStack {
-            if let cardNumber = bankCard.cardNumber {
+            if let cardNumber = cardModel.cardNumber, !cardNumber.isEmpty {
                 Text(cardNumber)
                     .font(.title2)
                     .bold()
@@ -89,7 +90,7 @@ struct CardView: View {
             HStack(alignment: .top, spacing: 0) {
                 Text("$")
                     .font(.caption2)
-                Text(bankCard.currentBalance.formatted())
+                Text(cardModel.currentBalance.formatted())
                     .bold()
                     .font(.title3)
             }
@@ -100,68 +101,28 @@ struct CardView: View {
         HStack(alignment: .bottom, spacing: 0) {
             currentBalance
             Spacer()
-            Text(DateFormatter.expireDateString(for: bankCard.expireDate))
+            Text(DateFormatter.expireDateString(for: cardModel.expireDate))
                 .bold()
         }
     }
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 0) {
-//            HStack {
-//                Image(systemName: "chart.bar.xaxis")
-//                    .imageScale(.large)
-//                    .onTapGesture {
-//                        isGoToCreateCard = true
-//                    }
-//                Spacer()
-//                Text(card.cardType.name)
-//                    .bold()
-//            }
-//            Spacer()
-//            HStack {
-//                if let cardNumber = card.cardNumber {
-//                    Text(cardNumber)
-//                        .font(.title2)
-//                        .bold()
-//                    Image(systemName: "document.on.document")
-//                        .imageScale(.small)
-//                    Spacer()
-//                }
-//                
-//            }
-//            Spacer()
-//            HStack(alignment: .bottom, spacing: 0) {
-//                currentBalance
-//                Spacer()
-//                Text(card.expireDateString)
-//                    .bold()
-//            }
-//        }
-//        .sheet(isPresented: $isGoToCreateCard) {
-//            RoundedRectangle(cornerRadius: 3)
-//                .fill(Color.red)
-//                .frame(maxWidth: .infinity)
-//        }
-//        .padding()
-//        .frame(height: 200)
-//        .background(
-//            VisualEffectView(
-//                effect: UIBlurEffect(
-//                    style: .systemThinMaterialDark
-//                )
-//            )
-//            .clipShape(RoundedRectangle(cornerRadius: 16))
-//        )
-//        .padding() // Dış padding
-//        
-//    }
-    
-
-    
-
 }
 
 
 
+#Preview("Empty Number") {
+    CardView(cardModel: DebitCard(), showCardDetailLogo: false)
+}
 #Preview {
-    CardView(bankCard: DebitCard.getMockBankCard())
+    CardView(
+        cardModel: DebitCard(
+            linkedAccount: nil,
+            cardNumber: "",
+            expireDate: Date.now,
+            cvv: "123",
+            currentBalance: 123,
+            overlayColorData: Color.red.toData(),
+            textColorData: Color.white.toData()
+        ),
+        showCardDetailLogo: false
+    )
 }

@@ -10,8 +10,12 @@ import Foundation
 class CardsViewModel: ObservableObject {
     
     @Published var bank: Bank
+    @Published var cards: [CardModelProtocol] = [DebitCard.getMockBankCard()]
     
     init(bank: Bank) {
         self.bank = bank
     }
 }
+
+
+

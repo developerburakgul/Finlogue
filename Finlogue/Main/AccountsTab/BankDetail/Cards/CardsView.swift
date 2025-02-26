@@ -9,18 +9,17 @@ import SwiftUI
 
 struct CardsView: View {
     @State var isShowAddCardView: Bool = false
-//    let bank: Bank
-//    @Environment(Bank.self) private var bank: Bank
     @ObservedObject var viewModel: CardsViewModel
     var body: some View {
         VStack {
             
             NavigationLink {
-//                CreateCardView(bank: bank)
+//                CreateCardView(bank: viewModel.bank)
             } label: {
                 addCardButton
                     .padding(.top)
             }
+            .foregroundColor(Color.black)
 
             cardList
         }
@@ -55,8 +54,7 @@ struct CardsView: View {
     private var cardList: some View {
         return ScrollView {
             ForEach(0..<10, id: \.self) { item in
-//                CardView(card: Card.getRandomCard())
-                Text("BB")
+                CardView(cardModel: viewModel.cards[0] , showCardDetailLogo: false)
             }
         }
     }
@@ -68,10 +66,9 @@ struct CardsView: View {
 //    }
 //    
 //}
-//#Preview("2") {
-//    NavigationStack {
-//        BankView(
-//            bank: Bank(name: "Deneme")
-//        )
-//    }
-//}
+#Preview("2") {
+    var cardsViewModel = CardsViewModel(bank: Bank.getRandomBank())
+    NavigationStack {
+        CardsView(viewModel: cardsViewModel)
+    }
+}

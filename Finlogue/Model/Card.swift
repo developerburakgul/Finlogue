@@ -9,51 +9,6 @@ import SwiftUI
 import SwiftData
 
 
-
-class Card2 {
-    var cardType: CardType = .credit
-    var cardNumber: String?
-    var currentBalance: Double = 0
-    var expireDate: Date?
-    //MARK: - UI
-    var overlayColorData: Data
-    var textColorData: Data
-    
-    init(
-        cardType: CardType = .credit,
-        cardNumber: String? = nil,
-        currentBalance: Double = 0,
-        overlayColorData: Data = Color.gray.toData(),
-        textColorData: Data = Color.black.toData(),
-        expireDate: Date? = nil
-    ) {
-        self.cardType = cardType
-        self.cardNumber = cardNumber
-        self.currentBalance = currentBalance
-        self.overlayColorData = overlayColorData
-        self.textColorData = textColorData
-        self.expireDate = expireDate
-    }
-    
-}
-
-extension Card2 {
-    static func getRandomCard() -> Card2 {
-        return Card2(
-            cardType: .credit,
-            cardNumber: "1234 5678 2467 9826",
-            expireDate: Date.now
-        )
-    }
-    static func getRandomEmptyCard() -> Card2 {
-        return Card2(
-            cardType: .credit,
-            cardNumber: nil,
-            expireDate: nil
-        )
-    }
-}
-
 enum CardType: String, CaseIterable, Codable {
     case credit, debit
     var name: String {
@@ -61,8 +16,21 @@ enum CardType: String, CaseIterable, Codable {
     }
 }
 
+
+
+protocol CardModelProtocol {
+    var id: UUID { get } // this property should be unique
+    var cardNumber: String? { get set } 
+    var expireDate: Date? { get set }
+    var cvv: String? { get set }
+    var currentBalance: Double { get}
+    var overlayColorData: Data { get set}
+    var textColorData: Data { get set }
+    var cardType: CardType { get set }
+}
+
 @Model
-class DebitCard {
+class DebitCard: CardModelProtocol{
     @Attribute(.unique)
     var id: UUID
     var linkedAccount: Account?
@@ -111,11 +79,14 @@ extension DebitCard {
 
 
 @Model
-class CreditCard {
+class CreditCard : CardModelProtocol {
+    var currentBalance: Double
+    
     @Attribute(.unique) var id: UUID
     var cardNumber: String?
-    var limit: Double
     var expireDate: Date?
+    var cvv: String?
+    var limit: Double
     var bank: Bank?
     var cardType: CardType
     var overlayColorData: Data
@@ -124,9 +95,10 @@ class CreditCard {
     init(
         cardNumber: String?,
         limit: Double,
-        dueDate: Date,
         bank: Bank?,
         expireDate: Date? = nil,
+        cvv: String? = nil,
+        currentBalance: Double = 0.0,
         overlayColorData: Data = Color.gray.toData(),
         textColorData: Data = Color.black.toData()
     ) {
@@ -138,6 +110,8 @@ class CreditCard {
         self.cardType = .credit
         self.overlayColorData = overlayColorData
         self.textColorData = textColorData
+        self.cvv = cvv
+        self.currentBalance = currentBalance
         
     }
 }
@@ -147,3 +121,5 @@ class Card {
     var currentBalance: Double = 0
     var expireDate: Date?
 }
+
+
