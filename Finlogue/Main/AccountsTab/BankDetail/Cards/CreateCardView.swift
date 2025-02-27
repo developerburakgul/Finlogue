@@ -7,33 +7,53 @@
 
 import SwiftUI
 public enum FocusableItems: Hashable {
-    case cardType, cardLimit, cardNumber, expireDateText, cvv, backgroundPicker, textColorPicker
+    case cardType,cardNumber, cardLimit, linkedBankAccount,  expireDateText, cvv, backgroundPicker, textColorPicker
 }
 struct CreateCardView: View {
     @Environment(\.dismiss) var dismiss
-
+    @StateObject var viewModel: CreateCardViewModel
+    @FocusState var focusedItem: FocusableItems?
+    @State var isShowExpireDate: Bool = false
+    //MARK: - Common
     @State var backgroundColor: Color = .gray
     @State var textColor: Color = .black
     @State var cardNumberText: String = ""
-    @StateObject var viewModel: CreateCardViewModel
-    @FocusState var focusedItem: FocusableItems?
     @State var selectedCardType: CardType?
+    @State var expireDateText: String = ""
+    @State var cvvText: String = ""
+    //MARK: - Debit
+    @State var selectedBankAccount: Account?
+    
+    var shouldSaveCard: Bool {
+        canSaveDebitCard || canSaveCreditCard
+    }
+    
+    var canSaveDebitCard: Bool{
+        selectedCardType == .debit
+        && selectedBankAccount != nil
+    }
+    var canSaveCreditCard: Bool{
+        selectedCardType == .credit
+        && cardLimitText != ""
+    }
+    
+    
+    //MARK: - Credit
     @State var cardLimitText: String = ""
     
-    @State var cvvText: String = ""
-    @State var expireDate: Date? // TODO: kaldırılcak
-    @State var isShowExpireDate: Bool = false
-    @State var expireDateText: String = ""
     
     var body: some View {
         cardView
         ScrollView {
             VStack(alignment: .leading, spacing: 8) {
                 cardTypeSelectionView
+                cardNumberView
                 if selectedCardType == .credit {
                     cardLimitView
+                } else if selectedCardType == .debit {
+                    bankAccountSelectionView
                 }
-                cardNumberView
+                
                 HStack {
                     expireDateView
                     Spacer()
@@ -43,33 +63,34 @@ struct CreateCardView: View {
 //                    backgroundColorPicker
 //                    textColorPicker
 //                }
+                
             }
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    if let focused = focusedItem {
-                        switch focused {
-                        case .cardLimit:
-                            Button("Go") {
-                                focusedItem = .cardNumber
-                            }
-                        case .cardNumber:
-                            Button("Go") {
-                                focusedItem = .expireDateText
-                                isShowExpireDate = true
-                            }
-                        case .expireDateText:
-                            Button("Go") {
-                                focusedItem = .cvv
-                            }
-                        case .cvv:
-                            Button("Go") {
-                                focusedItem = nil
-                            }
-                        default:
-                            EmptyView()
-                        }
-                    }
+//                    Spacer()
+//                    if let focused = focusedItem {
+//                        switch focused {
+//                        case .cardLimit:
+//                            Button("Go") {
+//                                focusedItem = .cardNumber
+//                            }
+//                        case .cardNumber:
+//                            Button("Go") {
+//                                focusedItem = .expireDateText
+//                                isShowExpireDate = true
+//                            }
+//                        case .expireDateText:
+//                            Button("Go") {
+//                                focusedItem = .cvv
+//                            }
+//                        case .cvv:
+//                            Button("Go") {
+//                                focusedItem = nil
+//                            }
+//                        default:
+//                            EmptyView()
+//                        }
+//                    }
                     
                 }
                 
@@ -77,6 +98,22 @@ struct CreateCardView: View {
             }
             .navigationTitle("Add Card")
         }
+        .safeAreaInset(edge: .bottom, alignment: .trailing) {
+                Button {
+                    createCard()
+                } label: {
+                    Circle()
+                        .fill(shouldSaveCard ? Color.green : Color.gray)
+                        .frame(width: 70, height: 70)
+                        .overlay(
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .imageScale(.large)
+                        )
+                }
+                .padding()
+                .disabled(!shouldSaveCard)
+            }
     }
     
     private var cardView: some View {
@@ -87,7 +124,8 @@ struct CreateCardView: View {
             cardNumber: $cardNumberText,
             limitText: $cardLimitText,
             expireDateText: $expireDateText,
-            cvvText: $cvvText
+            cvvText: $cvvText,
+            linkedBankAccount: $selectedBankAccount
         )
         
     }
@@ -117,40 +155,8 @@ struct CreateCardView: View {
                 }
         }
         .onChange(of: selectedCardType) { oldValue, newValue in
-            if newValue == .credit {
-                // Credit seçildiğinde cardLimit'e focus ol
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    focusedItem = .cardLimit
-                }
-            }
+            
         }
-        
-    }
-    //
-    private var cardLimitView: some View {
-        CustomView(
-            title: "Card Limit",
-            item: .cardLimit,
-            focus: $focusedItem,
-            isValid: !cardLimitText.isEmpty) {
-                if cardLimitText != "" {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                } else {
-                    Image(systemName: "xmark")
-                        .foregroundColor(.red)
-                }
-            } content: {
-                makeVerticalValidationView(
-                    errorText: "This Field should not be empty",
-                    isValid: cardLimitText != "") {
-                        TextField("Enter your card limit", text: $cardLimitText)
-                            .keyboardType(.numberPad)
-                            .focused($focusedItem, equals: .cardLimit) // Bu satırı ekleyin
-                        
-                    }
-            }
-        
         
     }
     
@@ -181,13 +187,74 @@ struct CreateCardView: View {
         
     }
     //
+    private var cardLimitView: some View {
+        CustomView(
+            title: "Card Limit",
+            item: .cardLimit,
+            focus: $focusedItem,
+            isValid: !cardLimitText.isEmpty) {
+                if cardLimitText != "" {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                } else {
+                    Image(systemName: "xmark")
+                        .foregroundColor(.red)
+                }
+            } content: {
+                makeVerticalValidationView(
+                    errorText: "This Field should not be empty",
+                    isValid: cardLimitText != "") {
+                        TextField("Enter your card limit", text: $cardLimitText)
+                            .keyboardType(.numberPad)
+                            .focused($focusedItem, equals: .cardLimit) // Bu satırı ekleyin
+                        
+                    }
+            }
+        
+        
+    }
+    
+    private var bankAccountSelectionView: some View {
+        
+        
+        Menu {
+            Picker("", selection: $selectedBankAccount) {
+                ForEach(viewModel.bankAccounts, id: \.self) { type in
+                    Text(type.name).tag(type)
+                    
+                }
+            }
+        } label: {
+            CustomView(
+                title: "Linked Bank Account",
+                item: .linkedBankAccount,
+                focus: $focusedItem,
+                isValid: selectedBankAccount != nil) {
+                    Image(systemName: "creditcard.and.123")
+                    if selectedCardType != nil {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                    }
+                } content: {
+                    Text(selectedBankAccount?.name ?? "Select Bank Account")
+                }
+        }
+        .onChange(of: selectedCardType) { oldValue, newValue in
+            
+        }
+        
+    }
+
+    
+
+    //
     private var expireDateView: some View {
         
         CustomView(
             title: "Expire Date",
             item: .expireDateText,
             focus: $focusedItem,
-            isValid: expireDate != nil) {
+            isValid: !expireDateText.isEmpty) {
                 Image(systemName: "calendar")
                     .onTapGesture {
                         isShowExpireDate.toggle()
@@ -213,7 +280,7 @@ struct CreateCardView: View {
             title: "Cvv",
             item: .cvv,
             focus: $focusedItem,
-            isValid: false) {
+            isValid: !cvvText.isEmpty) {
                 Image(systemName: "info.circle")
             } content: {
                 TextField("***", text: $cvvText)
@@ -297,6 +364,31 @@ struct CreateCardView: View {
                     .font(.caption)
             }
         }
+    }
+    
+    func createCard() {
+        if canSaveDebitCard {
+           let debit =  DebitCard(
+                linkedAccount: selectedBankAccount,
+                cardNumber: cardNumberText,
+                expireDate: Date.now,
+                cvv: cvvText
+            )
+            print(debit)
+        }
+        
+        if canSaveCreditCard {
+            let credit = CreditCard(
+                cardNumber: cardNumberText,
+                limit: 1,
+                bank: nil,
+                expireDate: Date.now,
+                cvv: cvvText,
+                currentBalance: 0
+            )
+            print(credit)
+        }
+        
     }
 
     

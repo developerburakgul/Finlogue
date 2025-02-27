@@ -8,7 +8,8 @@
 import Foundation
 class CreateCardViewModel: ObservableObject {
 
-
+    @Published var bankAccounts: [Account] = Account.getRandomAccount(time: 20)
+    
     let bank: Bank
     //   08*25
     // 0825
@@ -16,6 +17,7 @@ class CreateCardViewModel: ObservableObject {
 
     init(bank: Bank) {
         self.bank = bank
+//        self.bankAccounts = bank.accounts.filter {$0.accountType == .cashAccount}
     }
     
     func formatCardNumber(_ number: String) -> String {
@@ -51,11 +53,13 @@ class CreateCardViewModel: ObservableObject {
     func formatCVVText(_ numbers: String) -> String {
         let filtered = numbers.filter { $0.isNumber}
         var result = ""
+        for (_, character) in filtered.enumerated() {
+            result.append(character)
+        }
         if result.count > 3 {
-            result = String(result.prefix(5))
+            result = String(result.prefix(3))
         }
         return result
-
     }
     
     

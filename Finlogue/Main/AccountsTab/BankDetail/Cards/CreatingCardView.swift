@@ -15,6 +15,7 @@ struct CreatingCardView: View {
     @Binding var limitText: String
     @Binding var expireDateText: String
     @Binding var cvvText: String
+    @Binding var linkedBankAccount: Account?
     
     var body: some View {
         ZStack {
@@ -48,7 +49,10 @@ struct CreatingCardView: View {
     
     private var headerView: some View {
         HStack {
-            
+            if let linkedBankAccount = linkedBankAccount {
+                Text(linkedBankAccount.name)
+                    .bold()
+            }
             Spacer()
             Text("\(cardType?.name ?? "Card Type")")
                 .bold()
@@ -74,6 +78,14 @@ struct CreatingCardView: View {
         }
     }
     
+    private var footer: some View {
+        HStack(alignment: .top, spacing: 0) {
+            currentBalance
+            expireDateSection
+            
+        }
+    }
+    
     @ViewBuilder
     private var currentBalance: some View {
         
@@ -83,17 +95,13 @@ struct CreatingCardView: View {
                     Text("Card Limit")
                         .font(.caption)
                         .bold()
-                    HStack(alignment: .top, spacing: 0) {
-                        Text("$")
-                            .font(.caption2)
-                        Text(
-                            limitText.isEmpty
-                            ? "***"
-                            : limitText
-                        )
-                        .bold()
-                        .font(.title3)
-                    }
+                    Text(
+                        limitText.isEmpty
+                        ? "***"
+                        : limitText
+                    )
+                    .bold()
+                    .font(.title3)
                 }
                 
             }else {
@@ -102,17 +110,6 @@ struct CreatingCardView: View {
             Spacer()
         }
         
-    }
-    
-    private var cvvSection: some View {
-        VStack(alignment: .leading, spacing: 4){
-            Text("CVV")
-                .font(.caption)
-                .bold()
-            Text(cvvText.isEmpty ? "***" : cvvText)
-                .font(.caption2)
-            
-        }
     }
     
     private var expireDateSection: some View {
@@ -127,14 +124,7 @@ struct CreatingCardView: View {
         }
     }
     
-    private var footer: some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            currentBalance
-            cvvSection
-                .padding(.horizontal, 16)
-            expireDateSection
-        }
-    }
+
 }
 
 
