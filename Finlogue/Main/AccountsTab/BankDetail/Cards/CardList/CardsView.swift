@@ -14,7 +14,10 @@ struct CardsView: View {
         VStack {
             
             NavigationLink {
-//                CreateCardView(bank: viewModel.bank)
+                CreateCardView(viewModel: viewModel.createCardViewModel)
+                    .onDisappear {
+                        viewModel.fetchCards()
+                    }
             } label: {
                 addCardButton
                     .padding(.top)
@@ -53,8 +56,11 @@ struct CardsView: View {
     
     private var cardList: some View {
         return ScrollView {
-            ForEach(0..<10, id: \.self) { item in
-                CardView(cardModel: viewModel.cards[0] , showCardDetailLogo: false)
+//            ForEach(viewModel.cards, id: \.self) { item in
+//                CardView(cardModel: viewModel.cards[0] , showCardDetailLogo: false)
+
+            ForEach(viewModel.cards, id: \.hashValue) { item in
+                CardView(cardModel: item, showCardDetailLogo: true)
             }
         }
     }

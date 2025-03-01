@@ -11,7 +11,7 @@ public enum FocusableItems: Hashable {
 }
 struct CreateCardView: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel: CreateCardViewModel
+    @ObservedObject var viewModel: CreateCardViewModel
     @FocusState var focusedItem: FocusableItems?
     @State var isShowExpireDate: Bool = false
     //MARK: - Common
@@ -53,7 +53,6 @@ struct CreateCardView: View {
                 } else if selectedCardType == .debit {
                     bankAccountSelectionView
                 }
-                
                 HStack {
                     expireDateView
                     Spacer()
@@ -155,7 +154,6 @@ struct CreateCardView: View {
                 }
         }
         .onChange(of: selectedCardType) { oldValue, newValue in
-            
         }
         
     }
@@ -241,6 +239,9 @@ struct CreateCardView: View {
         }
         .onChange(of: selectedCardType) { oldValue, newValue in
             
+        }
+        .onAppear {
+            viewModel.updateBankAccounts()
         }
         
     }
@@ -368,25 +369,23 @@ struct CreateCardView: View {
     
     func createCard() {
         if canSaveDebitCard {
-           let debit =  DebitCard(
-                linkedAccount: selectedBankAccount,
-                cardNumber: cardNumberText,
-                expireDate: Date.now,
-                cvv: cvvText
+            viewModel.createDebitCard(
+                linkedAccount: selectedBankAccount!,
+                cardNumberString: cardNumberText,
+                expireDateString: expireDateText,
+                cvvString: cvvText
             )
-            print(debit)
+            dismiss()
         }
         
         if canSaveCreditCard {
-            let credit = CreditCard(
-                cardNumber: cardNumberText,
-                limit: 1,
-                bank: nil,
-                expireDate: Date.now,
-                cvv: cvvText,
-                currentBalance: 0
+            viewModel.createCreditCard(
+                cardNumberString: cardNumberText,
+                cardLimitText: cardLimitText,
+                expireDateString: expireDateText,
+                cvvString: cvvText
             )
-            print(credit)
+            dismiss()
         }
         
     }

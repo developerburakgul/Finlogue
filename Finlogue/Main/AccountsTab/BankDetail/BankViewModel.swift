@@ -16,8 +16,10 @@ class BankViewModel: ObservableObject {
     
     @Published
     var accountsViewModel: AccountsViewModel
+    
     @Published
     var cardsViewModel: CardsViewModel
+    
     
     init(bank: Bank) {
         self.bank = bank

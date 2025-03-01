@@ -16,6 +16,8 @@ class Bank: Identifiable, Hashable, ObservableObject{
     var iconName: String = "heart"
     @Relationship(deleteRule: .cascade,inverse: \Account.bank)
     var accounts: [Account] = []
+    
+    @Relationship(deleteRule: .cascade,inverse: \CreditCard.bank)
     var creditCards: [CreditCard] = []
     
     

@@ -18,7 +18,7 @@ enum CardType: String, CaseIterable, Codable {
 
 
 
-protocol CardModelProtocol {
+protocol CardModelProtocol: Hashable {
     var id: UUID { get } // this property should be unique
     var cardNumber: String? { get set } 
     var expireDate: Date? { get set }

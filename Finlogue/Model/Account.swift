@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUI
 
 
-enum AccountType: String, CaseIterable,Codable {
+enum AccountType: String, CaseIterable,Codable, Hashable {
     case cashAccount, investmentAccount
     var name: String {
         switch self {
@@ -30,6 +30,7 @@ class Account {
     var name: String
     var accountType: AccountType
     var bank: Bank?
+    @Relationship(deleteRule: .cascade,inverse: \DebitCard.linkedAccount)
     var debitCards: [DebitCard]
     
     init(name: String, accountType: AccountType, bank: Bank? = nil, bankCards: [DebitCard] = []) {

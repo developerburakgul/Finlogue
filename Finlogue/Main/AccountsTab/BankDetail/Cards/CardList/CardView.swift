@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CardView: View {
     @State var isGoToCreateCard: Bool = false
-    var cardModel: CardModelProtocol
+    var cardModel: any CardModelProtocol
     var showCardDetailLogo: Bool = true
 
-    init(cardModel: CardModelProtocol, showCardDetailLogo: Bool) {
+    init(cardModel: any CardModelProtocol, showCardDetailLogo: Bool) {
         self.cardModel = cardModel
         self.showCardDetailLogo = showCardDetailLogo
     }
