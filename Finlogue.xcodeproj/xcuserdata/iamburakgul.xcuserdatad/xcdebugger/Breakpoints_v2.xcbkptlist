@@ -30,8 +30,8 @@
             filePath = "Finlogue/Main/AccountsTab/BankDetail/Cards/CreateCard/CreateCardView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
             landmarkName = "bankAccountSelectionView"
             landmarkType = "24">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "Finlogue/Main/AccountsTab/BankDetail/Cards/CreateCard/CreateCardView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "bankAccountSelectionView"
             landmarkType = "24">
          </BreakpointContent>
