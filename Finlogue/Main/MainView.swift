@@ -66,7 +66,7 @@ struct MainView: View {
                     .tag(Tabs.profile)
             }
             .sheet(isPresented: $isShowAddSheet) {
-
+                IncomeExpense()
             }
             
             RoundedRectangle(cornerRadius: 24)

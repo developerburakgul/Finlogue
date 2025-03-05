@@ -16,11 +16,7 @@ struct HomeView: View {
                     .padding(.vertical)
                     .padding(.horizontal, 32)
                 Spacer()
-                if selectedSegment == .general {
-                    GeneralView()
-                } else {
-                    ComingView()
-                }
+                mainView
                 Spacer()
             }
             .navigationTitle("Home")
@@ -35,6 +31,15 @@ struct HomeView: View {
             }
         }
         .pickerStyle(SegmentedPickerStyle())
+    }
+    
+    @ViewBuilder
+    private var mainView: some View {
+        if selectedSegment == .coming {
+            ComingView()
+        } else {
+            GeneralView()
+        }
     }
 }
 
