@@ -9,12 +9,18 @@ import Foundation
 
 class IncomeCreateViewModel: ObservableObject {
     @Published
-    var accounts: [Account] = Account.getRandomAccount(time: 20)
-    @Published
-    var defaultAccount = Account.getRandomAccount(time: 20)[4]
+    var accounts: [Account]
+//    @Published
+//    var defaultAccount = Account.getRandomAccount(time: 20)[4]
     
+    private var service: IncomeCreateServiceProtocol = IncomeCreateService(modelContainer: CustomModelContainer.container)
     
+
+    init(accounts: [Account]) {
+        self.accounts = accounts
+    }
     
+
     func createOneTimeIncome(
         name: String,
         amount: String,
@@ -36,6 +42,10 @@ class IncomeCreateViewModel: ObservableObject {
         
         print(income)
         dump(income)
+        
+        Task {
+            try await service.addIncome(income)
+        }
         
     }
 }

@@ -17,6 +17,7 @@ struct BankView: View {
     @ObservedObject var bankViewModel: BankViewModel
     
     var body: some View {
+        let _ = Self._printChanges()
             Picker("Bank", selection: $selectedTab) {
                 ForEach(Tabs.allCases, id: \.self) { item in
                     if item == .accounts {

@@ -14,6 +14,7 @@ enum IncomeType: String, CaseIterable, Identifiable {
 }
 
 struct IncomeCreateView: View {
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: IncomeCreateViewModel
     
     
@@ -21,7 +22,7 @@ struct IncomeCreateView: View {
     @State var incomeName: String = ""
     @State var incomeAmount: String = ""
     @State var transactionDate: Date = .now
-    @State var selectedAccount: Account = Account.getRandomAccount(time: 20)[4]
+    @State var selectedAccount: Account? = nil
     @State var firstIncomeExpectedDate: Date = .now
     @State var incomeFrequency: IncomeFrequency = .monthly
     
@@ -49,6 +50,7 @@ struct IncomeCreateView: View {
             incomeAmountInput
             incomeTypeSelection
             accountSelection
+
             if selectedIncomeType == .oneTime {
                 transactionDateInput
             }
@@ -124,9 +126,10 @@ struct IncomeCreateView: View {
                 title: "Account  Selection") {
                     EmptyView()
                 } content: {
-                    Text(selectedAccount.name)
+                    Text(selectedAccount?.name ?? "Select Account")
                 }
         }
+    
     }
     
     private var transactionDateInput: some View {
@@ -167,6 +170,7 @@ struct IncomeCreateView: View {
     }
     
     private func createIncome() {
+        guard let selectedAccount else { return }
         //MARK: - TODO
         if selectedIncomeType == .oneTime {
             viewModel.createOneTimeIncome(
@@ -176,10 +180,12 @@ struct IncomeCreateView: View {
                 transactionDate: transactionDate
             )
         }
+        
+        dismiss()
     }
 }
 
 
-#Preview {
-    IncomeCreateView(viewModel: IncomeCreateViewModel())
-}
+//#Preview {
+//    IncomeCreateView(viewModel: IncomeCreateViewModel(accounts: Account.getRandomAccount(time: 10)))
+//}
