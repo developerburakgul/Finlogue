@@ -179,13 +179,23 @@ struct IncomeCreateView: View {
                 account: selectedAccount,
                 transactionDate: transactionDate
             )
+        } else if selectedIncomeType == .continuous {
+            viewModel.createContiniousIncome(
+                name: incomeName,
+                amount: incomeAmount,
+                account: selectedAccount,
+                expectedDate: firstIncomeExpectedDate,
+                frequency: incomeFrequency
+            )
         }
+        
+        
         
         dismiss()
     }
 }
 
 
-//#Preview {
-//    IncomeCreateView(viewModel: IncomeCreateViewModel(accounts: Account.getRandomAccount(time: 10)))
-//}
+#Preview {
+    IncomeCreateView(viewModel: IncomeCreateViewModel(accounts: Account.getRandomAccount(time: 10)))
+}

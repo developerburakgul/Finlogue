@@ -42,6 +42,7 @@ class DebitCard: CardModelProtocol{
     var overlayColorData: Data
     var textColorData: Data
     
+    
     init(
         linkedAccount: Account? = nil,
         cardNumber: String? = nil,
@@ -61,6 +62,7 @@ class DebitCard: CardModelProtocol{
         self.overlayColorData = overlayColorData
         self.textColorData = textColorData
     }
+
 }
 
 extension DebitCard {

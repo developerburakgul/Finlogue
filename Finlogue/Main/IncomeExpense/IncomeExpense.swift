@@ -62,13 +62,17 @@ struct IncomeExpense: View {
         IncomeCreateView(viewModel: viewModel.incomeCreateViewModel)
     }
     
+    private var expenseView: some View {
+        ExpenseCreateView(viewModel: viewModel.expenseCreateViewModel)
+    }
+    
     @ViewBuilder
     private var contentView: some View {
         switch selectedTab {
         case .income:
             incomeView
         case .expense:
-            Text("Expense")
+            expenseView
         }
     }
     

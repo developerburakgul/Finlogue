@@ -11,7 +11,15 @@ import SwiftData
 final class CustomModelContainer {
     static let container: ModelContainer = {
         do {
-            let schema = Schema([Account.self, Income.self])
+            let schema = Schema(
+                [
+                    Account.self,
+                    OneTimeIncome.self,
+                    ContiniousIncome.self,
+                    OneTimeExpense.self,
+                    ContiniousExpense.self
+                ]
+            )
             return try ModelContainer(for: schema, configurations: [])
         } catch {
             fatalError("Unable to initialize ModelContainer: \(error)")

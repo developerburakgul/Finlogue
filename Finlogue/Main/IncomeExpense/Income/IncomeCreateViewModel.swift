@@ -29,22 +29,41 @@ class IncomeCreateViewModel: ObservableObject {
     ) {
         
         guard let amount = Double(amount) else { return  }
-        let income = Income(
+        let oneTimeIncome = OneTimeIncome(
             name: name,
             amount: amount,
             transactionDate: transactionDate,
-            isRecurring: false,
             isReceived: true,
-            expectedDate: nil,
-            frequency: nil,
             linkedAccount: account
         )
         
-        print(income)
-        dump(income)
+        Task {
+            try await service.addOneTimeIncome(oneTimeIncome)
+        }
+        
+    }
+    
+    func createContiniousIncome(
+        name: String,
+        amount: String,
+        account: Account,
+        expectedDate: Date,
+        frequency: IncomeFrequency
+    ) {
+        
+        guard let amount = Double(amount) else { return  }
+        let continiousIncome = ContiniousIncome(
+            name: name,
+            amount: amount,
+            transactionDate: nil,
+            isReceived: false,
+            linkedAccount: account,
+            expectedDate: expectedDate,
+            frequency: frequency
+        )
         
         Task {
-            try await service.addIncome(income)
+            try await service.createContiniousIncome(continiousIncome)
         }
         
     }
