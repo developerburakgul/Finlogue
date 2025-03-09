@@ -11,6 +11,7 @@ struct CardsView: View {
     @State var isShowAddCardView: Bool = false
     @ObservedObject var viewModel: CardsViewModel
     var body: some View {
+        let _ = Self._printChanges()
         VStack {
             
             NavigationLink {

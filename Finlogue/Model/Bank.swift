@@ -19,7 +19,7 @@ class Bank: Identifiable, Hashable, ObservableObject{
     
     @Relationship(deleteRule: .cascade,inverse: \CreditCard.bank)
     var creditCards: [CreditCard] = []
-    
+//    var user: User?
     
     
     var netAmount: Double {

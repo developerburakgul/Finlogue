@@ -66,43 +66,50 @@ struct MainView: View {
                     .tag(Tabs.profile)
             }
             .sheet(isPresented: $isShowAddSheet) {
-
+                IncomeExpense()
             }
             
-            RoundedRectangle(cornerRadius: 24)
-                .fill(Color.gray.opacity(0.1))
-                .frame(width: .infinity, height: 70)
-                .padding(.horizontal)
-                .overlay {
-                    
-                    HStack(alignment: .center,spacing: 16) {
-                        ForEach(Tabs.allCases, id: \.self) { item in
-                            if item != .add {
-                                Button {
-                                    selectedTab = item
-                                } label: {
-                                    CustomTabItem(item: item,isActive: (selectedTab == item))
+            GeometryReader { proxy in
+                
+                VStack() {
+                    Spacer()
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(width: proxy.size.width - 20 ,height: 70, alignment: .bottom)
+                        .padding(.horizontal, 10)
+                        .overlay {
+                            
+                            HStack(alignment: .center,spacing: 16) {
+                                
+                                ForEach(Tabs.allCases, id: \.self) { item in
+                                    if item != .add {
+                                        Button {
+                                            selectedTab = item
+                                        } label: {
+                                            CustomTabItem(item: item,isActive: (selectedTab == item))
+                                        }
+                                        
+                                    } else {
+                                        Button {
+                                            isShowAddSheet = true
+                                        } label: {
+                                            CustomTabItem(item: item, isActive: false)
+                                        }
+                                        .frame(width: 65, height: 65)
+                                        .background(Color.white)
+                                        .clipShape(Circle())
+                                        .shadow(radius: 0.8)
+                                        .offset(y: 0)
+
+                                    }
                                 }
                                 
-                            } else {
-                                Button {
-                                    isShowAddSheet = true
-                                } label: {
-                                    CustomTabItem(item: item, isActive: false)
-                                }
-                                .frame(width: 65, height: 65)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                                .shadow(radius: 0.8)
-                                .offset(y: 0)
-
                             }
+                            .frame(height: 65)
                         }
-                        
-                    }
-                    .padding()
-                    .frame(height: 65)
+
                 }
+            }
         }
     }
     func CustomTabItem(item: Tabs, isActive: Bool) -> some View{

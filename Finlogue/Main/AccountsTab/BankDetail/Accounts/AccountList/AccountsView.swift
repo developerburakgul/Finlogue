@@ -11,6 +11,7 @@ struct AccountsView: View {
     @State var shouldShowCreateAccountView: Bool = false
     @ObservedObject var viewModel: AccountsViewModel
     var body: some View {
+        let _ = Self._printChanges()
         Group {
             if viewModel.countOfAllAccountTypes() == 0 {
                 emptyView
