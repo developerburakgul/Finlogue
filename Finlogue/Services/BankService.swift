@@ -21,7 +21,7 @@ protocol CreateBankServiceProtocol {
 
 @ModelActor
 actor BankService: BankListServiceProtocol, CreateBankServiceProtocol {
-    @MainActor
+    @MainActor // todo remove
     func getBanks() async throws -> [Bank] {
         do {
             let banks = try modelContainer.mainContext.fetch(

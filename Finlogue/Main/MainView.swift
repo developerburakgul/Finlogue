@@ -7,40 +7,162 @@
 
 import SwiftUI
 
+enum Tabs: String, CaseIterable, Hashable{
+    
+    
+    case home, dashboard, add, accounts, profile
+    
+    var nonselectedImage: String {
+        switch self {
+        case .home:
+            return "house"
+        case .dashboard:
+            return "chart.pie"
+        case .add:
+            return "plus"
+        case .accounts:
+            return "wallet.bifold"
+        case .profile:
+            return "person"
+        }
+    }
+    
+    var selectedImage: String {
+        switch self {
+        case .home:
+            return "house.fill"
+        case .dashboard:
+            return "chart.pie.fill"
+        case .add:
+            return "plus.circle.fill"
+        case .accounts:
+            return "wallet.bifold.fill"
+        case .profile:
+            return "person.fill"
+        }
+    }
+    
+    var title: String {
+        return self.rawValue.capitalized
+    }
+    
+    
+}
 struct MainView: View {
+    @State var selectedTab: Tabs = .home
+    @State var isShowAddSheet: Bool = false
     
     var body: some View {
-        TabView{
-            
-            Tab("Home", systemImage: "house") {
+        ZStack(alignment: .bottom) {
+            TabView(selection: $selectedTab) {
                 HomeView()
-                    .tag(0)
-            }
-            
-            Tab("Dashboard", systemImage: "chart.pie") {
-                settingsView
-                    .tag(1)
-            }
-        
-            
-            Tab("Accounts", systemImage: "wallet.bifold.fill") {
+                    .tag(Tabs.home)
+                dashboardView
+                    .tag(Tabs.dashboard)
                 BankListView()
-                    .tag(2)
-            }
-            
-            Tab("Profile", systemImage: "person") {
+                    .tag(Tabs.accounts)
+                
                 SettingsView()
-                    .tag(3)
+                    .tag(Tabs.profile)
+            }
+            .sheet(isPresented: $isShowAddSheet) {
+                IncomeExpense()
             }
             
-            
+            GeometryReader { proxy in
+                
+                VStack() {
+                    Spacer()
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(width: proxy.size.width - 20 ,height: 70, alignment: .bottom)
+                        .padding(.horizontal, 10)
+                        .overlay {
+                            
+                            HStack(alignment: .center,spacing: 16) {
+                                
+                                ForEach(Tabs.allCases, id: \.self) { item in
+                                    if item != .add {
+                                        Button {
+                                            selectedTab = item
+                                        } label: {
+                                            CustomTabItem(item: item,isActive: (selectedTab == item))
+                                        }
+                                        
+                                    } else {
+                                        Button {
+                                            isShowAddSheet = true
+                                        } label: {
+                                            CustomTabItem(item: item, isActive: false)
+                                        }
+                                        .frame(width: 65, height: 65)
+                                        .background(Color.white)
+                                        .clipShape(Circle())
+                                        .shadow(radius: 0.8)
+                                        .offset(y: 0)
+
+                                    }
+                                }
+                                
+                            }
+                            .frame(height: 65)
+                        }
+
+                }
+            }
         }
-        .tabViewStyle(.tabBarOnly)
+    }
+    func CustomTabItem(item: Tabs, isActive: Bool) -> some View{
+        VStack(alignment: .center,spacing: 4){
+            
+            Image(systemName: isActive ? item.selectedImage : item.nonselectedImage)
+                .resizable()
+                .renderingMode(.template)
+                .foregroundColor(isActive ? .black : .gray)
+                .frame(width: 15, height: 15)
+                .imageScale(isActive ? .large : .small)
+            
+            
+            Text(item.rawValue.capitalized)
+                .font(.caption)
+                .foregroundColor(isActive ? .black : .gray)
+        }
+        
     }
     
-    private var settingsView: some View {
-        Text("Settings")
+    private var dashboardView: some View {
+        Text("Dashboard")
     }
+    private var addView: some View {
+        Text("Add")
+    }
+    
+    //    TabView{
+    //
+    //        Tab("Home", systemImage: "house") {
+    //            HomeView()
+    //                .tag(0)
+    //        }
+    //
+    //        Tab("Dashboard", systemImage: "chart.pie") {
+    //            settingsView
+    //                .tag(1)
+    //        }
+    //
+    //
+    //        Tab("Accounts", systemImage: "wallet.bifold.fill") {
+    //            BankListView()
+    //                .tag(2)
+    //        }
+    //
+    //        Tab("Profile", systemImage: "person") {
+    //            SettingsView()
+    //                .tag(3)
+    //        }
+    //
+    //
+    //    }
+    //    .tabViewStyle(.tabBarOnly)
 }
 
 #Preview {

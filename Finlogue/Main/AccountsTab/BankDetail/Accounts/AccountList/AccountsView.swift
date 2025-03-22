@@ -11,6 +11,7 @@ struct AccountsView: View {
     @State var shouldShowCreateAccountView: Bool = false
     @ObservedObject var viewModel: AccountsViewModel
     var body: some View {
+        let _ = Self._printChanges()
         Group {
             if viewModel.countOfAllAccountTypes() == 0 {
                 emptyView
@@ -28,24 +29,17 @@ struct AccountsView: View {
         .navigationDestination(for: Bank.self) { bank in
 //            BankView(bank: bank)
         }
-        .safeAreaInset(edge: .bottom, alignment: .trailing) {
-                Button {
-                    shouldShowCreateAccountView = true
-                } label: {
-                    Circle()
-                        .fill(Color.black)
-                        .frame(width: 70, height: 70)
-                        .overlay(
-                            Image(systemName: "plus")
-                                .foregroundColor(.white)
-                                .imageScale(.large)
-                        )
-                }
-                .padding()
+        .toolbar {
+            Button {
+                shouldShowCreateAccountView = true
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .imageScale(.large)
+                    .foregroundColor(Color.black)
             }
-        .onAppear {
-            print(viewModel.countOfAllAccountTypes())
+
         }
+
     }
     
     private var emptyView: some View {
@@ -97,9 +91,9 @@ struct AccountsView: View {
     
 }
 
-//#Preview {
-//    return NavigationStack {
-//        AccountsView()
-//            .environment(Bank.getRandomBank(accountCount: 20))
-//    }
-//}
+#Preview {
+    NavigationStack {
+        AccountsView(viewModel: AccountsViewModel(bank: Bank.getRandomBank()))
+            
+    }
+}

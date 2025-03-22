@@ -34,21 +34,32 @@ struct BankListView: View {
                     
             }
             .navigationTitle("My Banks")
-            .safeAreaInset(edge: .bottom, alignment: .center) {
+//            .safeAreaInset(edge: .bottom, alignment: .center) {
+//                Button {
+//                    isShowCreateBankView = true
+//                } label: {
+//                    Circle()
+//                        .fill(Color.black)
+//                        .frame(width: 70, height: 70)
+//                        .overlay(
+//                            Image(systemName: "plus")
+//                                .foregroundColor(.white)
+//                                .imageScale(.large)
+//                        )
+//                }
+//                .padding()
+//            }
+            .toolbar {
                 Button {
                     isShowCreateBankView = true
                 } label: {
-                    Circle()
-                        .fill(Color.black)
-                        .frame(width: 70, height: 70)
-                        .overlay(
-                            Image(systemName: "plus")
-                                .foregroundColor(.white)
-                                .imageScale(.large)
-                        )
+                    Image(systemName: "plus.circle.fill")
+                        .imageScale(.large)
+                        .foregroundColor(Color.black)
                 }
-                .padding()
+
             }
+            
         }
     }
     

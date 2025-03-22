@@ -25,6 +25,18 @@ class CreateCardViewModel: ObservableObject {
             }
         }
     }
+    
+    @discardableResult
+    private func getDate(from dateString: String?) -> Date? {
+        guard let dateString = dateString else { return nil }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/yy"
+        guard let date = dateFormatter.date(from: dateString) else { return nil }
+        print(date)
+        return date
+    }
+    
+    
     //MARK: - Public Functions
     
     func formatCardNumber(_ number: String) -> String {
@@ -78,7 +90,7 @@ class CreateCardViewModel: ObservableObject {
         let debitCard = DebitCard(
             linkedAccount: linkedAccount,
             cardNumber: cardNumberString,
-            expireDate: nil, //MARK: - ToDO
+            expireDate: getDate(from: expireDateString),
             cvv: cvvString,
             currentBalance: 0
         )
@@ -93,13 +105,14 @@ class CreateCardViewModel: ObservableObject {
         expireDateString: String?,
         cvvString: String?
     ){
+        
         let creditCard = CreditCard(
             cardNumber: cardNumberString,
-            limit: 0.0, //MARK: - TODO
+            limit: Double(cardLimitText) ?? 100.0,
             bank: bank,
-            expireDate: .now, //MARK: - TODO
+            expireDate: getDate(from: expireDateString),
             cvv: cvvString,
-            currentBalance: 0 //MARK: - Todo
+            currentBalance: 0
         )
         Task {
             try await service.create(creditCard)

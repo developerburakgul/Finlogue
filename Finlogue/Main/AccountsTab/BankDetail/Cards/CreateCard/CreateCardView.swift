@@ -92,27 +92,25 @@ struct CreateCardView: View {
 //                    }
                     
                 }
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                        createCard()
+                    } label: {
+                        Text("Save")
+                            .font(.headline)
+                            .foregroundColor(shouldSaveCard ? Color.green : Color.gray)
+                    }
+                    .padding()
+                    .disabled(!shouldSaveCard)
+                    .buttonStyle(.bordered)
+                    
+                }
                 
                 
             }
             .navigationTitle("Add Card")
+            .navigationBarTitleDisplayMode(.large)
         }
-        .safeAreaInset(edge: .bottom, alignment: .trailing) {
-                Button {
-                    createCard()
-                } label: {
-                    Circle()
-                        .fill(shouldSaveCard ? Color.green : Color.gray)
-                        .frame(width: 70, height: 70)
-                        .overlay(
-                            Image(systemName: "plus")
-                                .foregroundColor(.white)
-                                .imageScale(.large)
-                        )
-                }
-                .padding()
-                .disabled(!shouldSaveCard)
-            }
     }
     
     private var cardView: some View {
